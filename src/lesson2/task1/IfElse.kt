@@ -66,8 +66,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    (age % 10 == 1) && (age != 11 && age != 111) -> ("$age год")
-    (age % 10 in 2..4) && (age !in 11..14 && age !in 111..114) -> ("$age года")
+    age % 10 == 1 && age % 100 != 11 -> ("$age год")
+    age % 10 in 2..4 && age % 100 !in 11..14 -> ("$age года")
     else -> ("$age лет")
 }
 
@@ -109,8 +109,7 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int = when {
-    (kingX == rookX1) && ((rookX1 == rookX2) || (kingY == rookY2)) -> 3
-    (kingY == rookY1) && ((rookY1 == rookY2) || (kingX == rookX2)) -> 3
+    (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
     kingX == rookX1 || kingY == rookY1 -> 1
     kingX == rookX2 || kingY == rookY2 -> 2
     else -> 0
@@ -131,13 +130,13 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    var answer = 0
-    if ((kingX == rookX || kingY == rookY) && (abs(bishopX - kingX) == abs(bishopY - kingY))) answer = 3
-    else if (kingX == rookX || kingY == rookY) answer = 1
-    else if (abs(bishopX - kingX) == abs(bishopY - kingY)) answer = 2
-    return answer
+): Int = when {
+    (kingX == rookX || kingY == rookY) && (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 3
+    kingX == rookX || kingY == rookY -> 1
+    abs(bishopX - kingX) == abs(bishopY - kingY) -> 2
+    else -> 0
 }
+
 
 /**
  * Простая
@@ -149,15 +148,15 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     if (a + b < c || a + c < b || b + c < a) return -1
-    var cosinus = 0.0
-    cosinus = when (maxOf(a, b, c)) {
+    var cosine = 0.0
+    cosine = when (maxOf(a, b, c)) {
         a -> (sqr(b) + sqr(c) - sqr(a)) / 2 * b * c
         b -> (sqr(a) + sqr(c) - sqr(b)) / 2 * a * c
         else -> (sqr(a) + sqr(b) - sqr(c)) / 2 * a * b
     }
     return when {
-        (cosinus < 0.0) -> 2
-        (cosinus > 0.0) -> 0
+        (cosine < 0.0) -> 2
+        (cosine > 0.0) -> 0
         else -> 1
     }
 }
