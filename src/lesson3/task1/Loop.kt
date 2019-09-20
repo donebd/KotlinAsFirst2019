@@ -236,12 +236,13 @@ fun cos(x: Double, eps: Double): Double = TODO()
  */
 fun revert(n: Int): Int {
     var n = n
-    var n1 = 0
+    var n1: Long = 0
     while (n > 0) {
         n1 = (n1 + (n % 10)) * 10
         n /= 10
     }
-    return n1 / 10
+    n1 /= 10
+    return n1.toInt()
 }
 
 /**
@@ -275,7 +276,7 @@ fun hasDifferentDigits(n: Int): Boolean {
         n /= 10
         variable %= 10
     }
-return false
+    return false
 }
 
 
