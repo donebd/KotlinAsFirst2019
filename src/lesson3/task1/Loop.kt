@@ -302,22 +302,33 @@ fun main() {
  * Сложная
  *
  * Найти n-ю цифру последовательности из квадратов целых чисел:
- * 14916253649648110012114416919622525628932436140044148452957662567672978484190096110241089115612251296136914441521160016811764184919362025211622092304240125002601270428092916302531363249336434813600372138443969409642254356448946244761490050415184532954765625577659296084624164006561672468897056722573967569774479218100828184648649883690259216940996049801
-
+ * 149162536496481100121144..
+ *
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun revert_long(n: Long): Long {
+    var n = n
+    var n1: Long = 0
+    while (n > 0) {
+        n1 = (n1 + (n % 10)) * 10
+        n /= 10
+    }
+    return n1 / 10
+}
+
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     if (n in 1..3) return n * n
     var i = 0.0
-    var number = 0
+    var number: Long = 0
     var countNumber = 0
+    var answer: Long = 0
     while (count < n) {
         i++
         countNumber = 0
-        number = i.pow(2).toInt()
+        number = i.pow(2).toLong()
         while (number > 0) {
             count++
             countNumber++
@@ -325,10 +336,11 @@ fun squareSequenceDigit(n: Int): Int {
             number /= 10
         }
     }
-    number = i.pow(2).toInt()
-    number = revert(number)
+    number = i.pow(2).toLong()
+    number = revert_long(number)
     for (i in 1 until countNumber) number /= 10
-    return number % 10
+    answer = number % 10
+    return answer.toInt()
 }
 
 /**
