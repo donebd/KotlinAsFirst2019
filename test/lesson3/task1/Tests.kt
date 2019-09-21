@@ -205,6 +205,7 @@ class Tests {
         assertEquals(17571, revert(17571))
         assertEquals(123456789, revert(987654321))
         assertEquals(258958221, revert(122859852))
+        assertEquals(857412671, revert(176214758))
     }
 
     @Test
@@ -236,6 +237,8 @@ class Tests {
         assertEquals(6, squareSequenceDigit(12))
         assertEquals(0, squareSequenceDigit(17))
         assertEquals(9, squareSequenceDigit(27))
+        assertEquals(4, squareSequenceDigit(85))
+        assertEquals(1, squareSequenceDigit(404))
     }
 
     @Test
