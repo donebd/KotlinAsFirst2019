@@ -310,95 +310,34 @@ fun main() {
  */
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    return when {
-        n < 4 -> n * n
-        n < 16 -> {
-            for (i in 6..n step 2) count++
-            if (n % 2 == 0) ((n - count).toDouble().pow(2) / 10).toInt()
-            else ((n - count - 1).toDouble().pow(2) % 10).toInt()
-        }
-        n < 82 -> {
-            count = 6
-            for (i in 19..n step 3) count += 2
-            when {
-                n % 3 == 1 -> ((n - count).toDouble().pow(2) / 100).toInt()
-                n % 3 == 2 -> ((n - count - 1).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 2).toDouble().pow(2) % 10).toInt()
-            }
-        }
-        n < 354 -> {
-            count = 50
-            for (i in 86..n step 4) count += 3
-            when {
-                n % 4 == 2 -> ((n - count).toDouble().pow(2) / 1000).toInt()
-                n % 4 == 3 -> ((n - count - 1).toDouble().pow(2) / 100 % 10).toInt()
-                n % 4 == 0 -> ((n - count - 2).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 3).toDouble().pow(2) % 10).toInt()
-            }
-        }
-        n < 1439 -> {
-            count = 254
-            for (i in 359..n step 5) count += 4
-            when {
-                n % 5 == 4 -> ((n - count).toDouble().pow(2) / 10000).toInt()
-                n % 5 == 0 -> ((n - count - 1).toDouble().pow(2) / 1000 % 10).toInt()
-                n % 5 == 1 -> ((n - count - 2).toDouble().pow(2) / 100 % 10).toInt()
-                n % 5 == 2 -> ((n - count - 3).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 4).toDouble().pow(2) % 10).toInt()
-            }
-
-        }
-        n < 5537 -> {
-            count = 1122
-            for (i in 1445..n step 6) count += 5
-            when {
-                n % 6 == 5 -> ((n - count).toDouble().pow(2) / 100000).toInt()
-                n % 6 == 0 -> ((n - count - 1).toDouble().pow(2) / 10000 % 10).toInt()
-                n % 6 == 1 -> ((n - count - 2).toDouble().pow(2) / 1000 % 10).toInt()
-                n % 6 == 2 -> ((n - count - 3).toDouble().pow(2) / 100 % 10).toInt()
-                n % 6 == 3 -> ((n - count - 4).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 5).toDouble().pow(2) % 10).toInt()
-            }
-
-        }
-        n < 20678 -> {
-            count = 4537
-            for (i in 5544..n step 7) count += 6
-            when {
-                n % 7 == 0 -> ((n - count).toDouble().pow(2) / 1000000).toInt()
-                n % 7 == 1 -> ((n - count - 1).toDouble().pow(2) / 100000 % 10).toInt()
-                n % 7 == 2 -> ((n - count - 2).toDouble().pow(2) / 10000 % 10).toInt()
-                n % 7 == 3 -> ((n - count - 3).toDouble().pow(2) / 1000 % 10).toInt()
-                n % 7 == 4 -> ((n - count - 4).toDouble().pow(2) / 100 % 10).toInt()
-                n % 7 == 5 -> ((n - count - 5).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 6).toDouble().pow(2) % 10).toInt()
-            }
-
-        }
-
-        else -> {
-            count = 17513
-            for (i in 20686..n step 8) count += 7
-            when {
-                n % 8 == 6 -> ((n - count).toDouble().pow(2) / 10000000).toInt()
-                n % 8 == 7 -> ((n - count - 1).toDouble().pow(2) / 1000000 % 10).toInt()
-                n % 8 == 0 -> ((n - count - 2).toDouble().pow(2) / 100000 % 10).toInt()
-                n % 8 == 1 -> ((n - count - 3).toDouble().pow(2) / 10000 % 10).toInt()
-                n % 8 == 2 -> ((n - count - 4).toDouble().pow(2) / 1000 % 10).toInt()
-                n % 8 == 3 -> ((n - count - 5).toDouble().pow(2) / 100 % 10).toInt()
-                n % 8 == 4 -> ((n - count - 6).toDouble().pow(2) / 10 % 10).toInt()
-                else -> ((n - count - 7).toDouble().pow(2) % 10).toInt()
-            }
+    if (n in 1..3) return n * n
+    var i = 0.0
+    var number = 0
+    var countNumber = 0
+    while (count < n) {
+        i++
+        countNumber = 0
+        number = i.pow(2).toInt()
+        while (number > 0) {
+            count++
+            countNumber++
+            if (count == n) break
+            number /= 10
         }
     }
+    number = i.pow(2).toInt()
+    number = revert(number)
+    for (i in 1 until countNumber) number /= 10
+    return number % 10
 }
-    /**
-     * Сложная
-     *
-     * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
-     * 1123581321345589144...
-     * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
-     *
-     * Использовать операции со строками в этой задаче запрещается.
-     */
-    fun fibSequenceDigit(n: Int): Int = TODO()
+
+/**
+ * Сложная
+ *
+ * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
+ * 1123581321345589144...
+ * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
+ *
+ * Использовать операции со строками в этой задаче запрещается.
+ */
+fun fibSequenceDigit(n: Int): Int = TODO()
