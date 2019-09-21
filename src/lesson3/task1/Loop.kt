@@ -292,7 +292,7 @@ fun hasDifferentDigits(n: Int): Boolean {
 
 fun main() {
     var b = 0
-    for (i in 1..316) {
+    for (i in 1..3163) {
         b = i * i
         print(" $b ")
     }
@@ -348,7 +348,7 @@ fun squareSequenceDigit(n: Int): Int {
             }
 
         }
-        else -> {
+        n < 5537 -> {
             count = 1122
             for (i in 1445..n step 6) count += 5
             when {
@@ -361,16 +361,44 @@ fun squareSequenceDigit(n: Int): Int {
             }
 
         }
+        n < 20678 -> {
+            count = 4537
+            for (i in 5544..n step 7) count += 6
+            when {
+                n % 7 == 0 -> ((n - count).toDouble().pow(2) / 1000000).toInt()
+                n % 7 == 1 -> ((n - count - 1).toDouble().pow(2) / 100000 % 10).toInt()
+                n % 7 == 2 -> ((n - count - 2).toDouble().pow(2) / 10000 % 10).toInt()
+                n % 7 == 3 -> ((n - count - 3).toDouble().pow(2) / 1000 % 10).toInt()
+                n % 7 == 4 -> ((n - count - 4).toDouble().pow(2) / 100 % 10).toInt()
+                n % 7 == 5 -> ((n - count - 5).toDouble().pow(2) / 10 % 10).toInt()
+                else -> ((n - count - 6).toDouble().pow(2) % 10).toInt()
+            }
+
+        }
+
+        else -> {
+            count = 17513
+            for (i in 20686..n step 8) count += 7
+            when {
+                n % 8 == 6 -> ((n - count).toDouble().pow(2) / 10000000).toInt()
+                n % 8 == 7 -> ((n - count - 1).toDouble().pow(2) / 1000000 % 10).toInt()
+                n % 8 == 0 -> ((n - count - 2).toDouble().pow(2) / 100000 % 10).toInt()
+                n % 8 == 1 -> ((n - count - 3).toDouble().pow(2) / 10000 % 10).toInt()
+                n % 8 == 2 -> ((n - count - 4).toDouble().pow(2) / 1000 % 10).toInt()
+                n % 8 == 3 -> ((n - count - 5).toDouble().pow(2) / 100 % 10).toInt()
+                n % 8 == 4 -> ((n - count - 6).toDouble().pow(2) / 10 % 10).toInt()
+                else -> ((n - count - 7).toDouble().pow(2) % 10).toInt()
+            }
+        }
     }
 }
-
-/**
- * Сложная
- *
- * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
- * 1123581321345589144...
- * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
- *
- * Использовать операции со строками в этой задаче запрещается.
- */
-fun fibSequenceDigit(n: Int): Int = TODO()
+    /**
+     * Сложная
+     *
+     * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
+     * 1123581321345589144...
+     * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
+     *
+     * Использовать операции со строками в этой задаче запрещается.
+     */
+    fun fibSequenceDigit(n: Int): Int = TODO()
