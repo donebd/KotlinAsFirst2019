@@ -292,7 +292,7 @@ fun hasDifferentDigits(n: Int): Boolean {
 
 fun main() {
     var b = 0
-    for (i in 1..99) {
+    for (i in 1..316) {
         b = i * i
         print(" $b ")
     }
@@ -326,7 +326,7 @@ fun squareSequenceDigit(n: Int): Int {
                 else -> ((n - count - 2).toDouble().pow(2) % 10).toInt()
             }
         }
-        else -> {
+        n < 354 -> {
             count = 50
             for (i in 86..n step 4) count += 3
             when {
@@ -335,6 +335,18 @@ fun squareSequenceDigit(n: Int): Int {
                 n % 4 == 0 -> ((n - count - 2).toDouble().pow(2) / 10 % 10).toInt()
                 else -> ((n - count - 3).toDouble().pow(2) % 10).toInt()
             }
+        }
+        else -> {
+            count = 254
+            for (i in 359..n step 5) count += 4
+            when {
+                n % 5 == 4 -> ((n - count).toDouble().pow(2) / 10000).toInt()
+                n % 5 == 0 -> ((n - count - 1).toDouble().pow(2) / 1000 % 10).toInt()
+                n % 5 == 1 -> ((n - count - 2).toDouble().pow(2) / 100 % 10).toInt()
+                n % 5 == 2 -> ((n - count - 3).toDouble().pow(2) / 10 % 10).toInt()
+                else -> ((n - count - 4).toDouble().pow(2) % 10).toInt()
+            }
+
         }
     }
 }
