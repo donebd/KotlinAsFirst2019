@@ -336,7 +336,7 @@ fun squareSequenceDigit(n: Int): Int {
                 else -> ((n - count - 3).toDouble().pow(2) % 10).toInt()
             }
         }
-        else -> {
+        n < 1439 -> {
             count = 254
             for (i in 359..n step 5) count += 4
             when {
@@ -345,6 +345,19 @@ fun squareSequenceDigit(n: Int): Int {
                 n % 5 == 1 -> ((n - count - 2).toDouble().pow(2) / 100 % 10).toInt()
                 n % 5 == 2 -> ((n - count - 3).toDouble().pow(2) / 10 % 10).toInt()
                 else -> ((n - count - 4).toDouble().pow(2) % 10).toInt()
+            }
+
+        }
+        else -> {
+            count = 1122
+            for (i in 1445..n step 6) count += 5
+            when {
+                n % 6 == 5 -> ((n - count).toDouble().pow(2) / 100000).toInt()
+                n % 6 == 0 -> ((n - count - 1).toDouble().pow(2) / 10000 % 10).toInt()
+                n % 6 == 1 -> ((n - count - 2).toDouble().pow(2) / 1000 % 10).toInt()
+                n % 6 == 2 -> ((n - count - 3).toDouble().pow(2) / 100 % 10).toInt()
+                n % 6 == 3 -> ((n - count - 4).toDouble().pow(2) / 10 % 10).toInt()
+                else -> ((n - count - 5).toDouble().pow(2) % 10).toInt()
             }
 
         }
