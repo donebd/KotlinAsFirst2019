@@ -2,9 +2,7 @@
 
 package lesson3.task1
 
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -203,7 +201,20 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var x = x
+    var count = 0
+    while (x > 1) {
+        if (x % 2 == 0) {
+            x /= 2
+            count++
+        } else {
+            x = x * 3 + 1
+            count++
+        }
+    }
+    return count
+}
 
 /**
  * Средняя
@@ -289,7 +300,27 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var count = 0
+    return when {
+        n < 4 -> n * n
+        n < 16 -> {
+            for (i in 6..n step 2) count++
+            if (n % 2 == 0) ((n - count).toDouble().pow(2) / 10).toInt()
+            else ((n - count - 1).toDouble().pow(2) % 10).toInt()
+        }
+        else -> {
+            count = 6
+            for (i in 19..n step 3) count += 2
+            when {
+                n % 3 == 1 -> ((n - count).toDouble().pow(2) / 100).toInt()
+                n % 3 == 2 -> ((n - count - 1).toDouble().pow(2) / 10 % 10).toInt()
+                else -> ((n - count - 2).toDouble().pow(2) % 10).toInt()
+            }
+        }
+    }
+}
+
 
 /**
  * Сложная
