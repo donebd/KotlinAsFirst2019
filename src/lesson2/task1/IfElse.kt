@@ -7,6 +7,7 @@ import lesson1.task1.sqr
 import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * Пример
@@ -66,9 +67,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    age % 10 == 1 && age % 100 != 11 -> ("$age год")
-    age % 10 in 2..4 && age % 100 !in 11..14 -> ("$age года")
-    else -> ("$age лет")
+    age % 10 == 1 && age % 100 != 11 -> "$age год"
+    age % 10 in 2..4 && age % 100 !in 11..14 -> "$age года"
+    else -> "$age лет"
 }
 
 
@@ -161,7 +162,6 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     }
 }
 
-
 /**
  * Средняя
  *
@@ -170,9 +170,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    c in a..b -> if (d in a..b) d - c else b - c
-    a in c..d -> if (b in c..d) b - a else d - a
-    else -> -1
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    var answer = min(b, d) - max(a, c)
+    return if (answer < 0) -1 else answer
 }
 
