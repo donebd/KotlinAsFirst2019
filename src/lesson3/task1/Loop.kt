@@ -80,7 +80,7 @@ fun digitNumber(n: Int): Int = when {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    if (n == 1 || n == 2) return 1
+    if (n < 3) return 1
     var n3 = 1
     var n2 = 1
     var n1 = 2
@@ -98,8 +98,6 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-
-
 fun lcm(m: Int, n: Int): Int {
     var answer = maxOf(m, n)
     var i = 0
@@ -119,17 +117,14 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var result = 0
-    for (i in 2..n) {
+    var result = n
+    for (i in 2..sqrt(n.toDouble()).toInt())
         if (n % i == 0) {
             result = i
             break
         }
-    }
-
     return result
 }
-
 
 /**
  * Простая
@@ -154,17 +149,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val min = min(m, n)
-    if (m % min == 0 && n % min == 0 && min > 1) return false
-    for (i in min / 2 downTo 2) {
-        if (m % i == 0 && n % i == 0) {
-            return false
-            break
-        }
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = (minDivisor(m) != minDivisor(n) && m % n != 0 && n % m != 0)
 
 /**
  * Простая
@@ -173,17 +158,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    val sqrtm = sqrt(m.toDouble()).toInt()
-    val sqrtn = sqrt(n.toDouble()).toInt()
-    for (i in sqrtm..sqrtn) {
-        if (i * i in m..n) {
-            return true
-            break
-        }
-    }
-    return false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean =
+    (sqrt(m.toDouble()) % 1.0 == 0.0 || sqrt(n.toDouble()) % 1.0 == 0.0 || sqrt(n.toDouble()).toInt() > sqrt(m.toDouble()).toInt())
 
 /**
  * Средняя
@@ -205,13 +181,8 @@ fun collatzSteps(x: Int): Int {
     var x = x
     var count = 0
     while (x > 1) {
-        if (x % 2 == 0) {
-            x /= 2
-            count++
-        } else {
-            x = x * 3 + 1
-            count++
-        }
+        if (x % 2 == 0) x /= 2 else x = x * 3 + 1
+        count++
     }
     return count
 }
@@ -278,8 +249,8 @@ fun isPalindrome(n: Int): Boolean = (n == revert(n))
 fun hasDifferentDigits(n: Int): Boolean {
     var n = n
     var variable = n % 10
-    if (n in 0..9) return false
-    else while (n > 9) {
+    if (n < 10) return false
+    while (n > 9) {
         if ((n / 10) % 10 != variable) {
             return true
             break
@@ -288,14 +259,6 @@ fun hasDifferentDigits(n: Int): Boolean {
         variable %= 10
     }
     return false
-}
-
-fun main() {
-    var b = 0
-    for (i in 1..3163) {
-        b = i * i
-        print(" $b ")
-    }
 }
 
 /**
@@ -308,39 +271,24 @@ fun main() {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert_long(n: Long): Long {
-    var n = n
-    var n1: Long = 0
-    while (n > 0) {
-        n1 = (n1 + (n % 10)) * 10
-        n /= 10
-    }
-    return n1 / 10
-}
-
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    if (n in 1..3) return n * n
+    if (n < 4) return n * n
     var i = 0.0
-    var number: Long = 0
-    var countNumber = 0
-    var answer: Long = 0
+    var number = 0
+    var answer = 0
     while (count < n) {
         i++
-        countNumber = 0
-        number = i.pow(2).toLong()
+        number = i.pow(2).toInt()
         while (number > 0) {
             count++
-            countNumber++
-            if (count == n) break
             number /= 10
         }
     }
-    number = i.pow(2).toLong()
-    number = revert_long(number)
-    for (i in 1 until countNumber) number /= 10
-    answer = number % 10
-    return answer.toInt()
+    answer = i.pow(2).toInt()
+    count -= n
+    for (i in 1..count) answer /= 10
+    return answer % 10
 }
 
 /**
@@ -354,25 +302,21 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
-    if (n in 1..6) return fib(n)
+    if (n < 7) return fib(n)
     var i = 0.0
-    var number: Long = 0
-    var countNumber = 0
-    var answer: Long = 0
+    var number = 0
+    var answer = 0
     while (count < n) {
         i++
-        countNumber = 0
-        number = fib(i.toInt()).toLong()
+        number = fib(i.toInt())
         while (number > 0) {
             count++
-            countNumber++
-            if (count == n) break
             number /= 10
         }
     }
-    number = fib(i.toInt()).toLong()
-    number = revert_long(number)
-    for (i in 1 until countNumber) number /= 10
-    answer = number % 10
-    return answer.toInt()
+    answer = fib(i.toInt())
+    count -= n
+    for (i in 1..count) answer /= 10
+    return answer % 10
 }
+

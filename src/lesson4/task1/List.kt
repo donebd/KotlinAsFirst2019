@@ -146,7 +146,7 @@ fun mean(list: List<Double>): Double = when {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     if (list.isEmpty()) return list
-    var average = mean(list)
+    val average = mean(list)
     for (i in 0 until list.size) list[i] -= average
     return list
 }
@@ -191,11 +191,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var result = 0
-    for (i in 0 until list.size) {
-        result += list[i]
-        list[i] = result
-    }
+    for (i in 1 until list.size) list[i] += list[i - 1]
     return list
 }
 
@@ -210,10 +206,10 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 
 fun factorize(n: Int): List<Int> {
     var n = n
-    var a = mutableListOf<Int>()
+    val a = mutableListOf<Int>()
     while (n != 1) {
         for (i in 2..n) if (n % i == 0) {
-            a.add(i)
+            a += i
             n /= i
             break
         }
@@ -235,7 +231,7 @@ fun factorize(n: Int): List<Int> {
  */
 fun factorizeToString(n: Int): String {
     var n = n
-    var a = mutableListOf<Int>()
+    val a = mutableListOf<Int>()
     while (n != 1) {
         for (i in 2..n) if (n % i == 0) {
             a.add(i)
@@ -322,10 +318,11 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
+//Для решения использовал таблицу ASCII. Константа 48 (48 элемент цифра 0). Константа 87 ( Латинская a в таблице 97 элмент 'a'.toInt()-87 = 10)
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0.0
     for (i in 0 until str.length) {
-        result += if (str[i].toInt() - 48 in 0..9) (str[i].toInt() - 48) * base.toDouble().pow(str.length - i - 1)
+        result += if (str[i].toInt() - 48 < 10) (str[i].toInt() - 48) * base.toDouble().pow(str.length - i - 1)
         else (str[i].toInt() - 87) * base.toDouble().pow(str.length - i - 1)
     }
     return result.toInt()
@@ -393,10 +390,6 @@ fun roman(n: Int): String {
     }
     for (i in 1..n) result += "I"
     return result
-}
-
-fun main() {
-    print(russian(2019))
 }
 
 /**
