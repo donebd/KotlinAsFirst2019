@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+
 /**
  * Пример
  *
@@ -80,6 +81,14 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
     return res
 }
 
+fun main() {
+    val result = mutableMapOf<Int, Int>()
+    var x = result[2]
+    x = 2
+    result[2] = x
+    x++
+    print(result[2])
+}
 
 /**
  * Простая
@@ -91,7 +100,18 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val result = mutableMapOf<Int, MutableList<String>>()
+    for ((name, mark) in grades) {
+        var list = result[mark]
+        if (list == null) {
+            list = mutableListOf()
+            result[mark] = list
+        }
+        list.add(name)
+    }
+    return result
+}
 
 /**
  * Простая
@@ -103,7 +123,10 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((key) in a) if (a[key] != b[key]) return false
+    return true
+}
 
 /**
  * Простая
@@ -119,7 +142,9 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+    for ((key) in b) if (a[key] == b[key]) a.remove(key)
+}
 
 /**
  * Простая
@@ -128,7 +153,11 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TO
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
+    val answer = mutableListOf<String>()
+    for (i in a) if (!answer.contains(i) && b.contains(i)) answer.add(i)
+    return answer
+}
 
 /**
  * Средняя
@@ -147,7 +176,12 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val answer = mapA.toMutableMap()
+    for ((key, number) in mapB) if (answer.contains(key) && number != answer[key])
+        answer[key] += ", $number" else answer[key] = number
+    return answer
+}
 
 /**
  * Средняя
@@ -187,7 +221,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    for (i in 0 until word.length) if (word[i] !in chars) return false
+    return true
+}
 
 /**
  * Средняя
