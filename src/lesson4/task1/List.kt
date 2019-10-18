@@ -255,7 +255,7 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    var a = mutableListOf<Int>()
+    val a = mutableListOf<Int>()
     var n = n
     while (n >= base) {
         a.add(n % base)
