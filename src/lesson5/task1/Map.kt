@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.lang.NullPointerException
+
 
 /**
  * Пример
@@ -188,7 +190,8 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     var answer = stockPrices.toMap().toMutableMap()
     for ((a) in stockPrices) {
-        answer[a] = stockPrices.filter { it.first == a }.sumByDouble { it.second } / stockPrices.filter { it.first == a }.size
+        answer[a] =
+            stockPrices.filter { it.first == a }.sumByDouble { it.second } / stockPrices.filter { it.first == a }.size
     }
     return answer
 }
@@ -200,7 +203,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  * Входными данными является ассоциативный массив
  * "название товара"-"пара (тип товара, цена товара)"
  * и тип интересующего нас товара.
- * Необходимо вернуть название товара заданного типа с минимальной стоимостью
+ * Необходимо вернуть название товара заданного типа с минимальной стоимостьюx
  * или null в случае, если товаров такого типа нет.
  *
  * Например:
@@ -209,7 +212,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var a =
+        stuff.filter { it.value.first == kind }.minBy{ it.value.second } ?: return null
+    return a.key
+}
 
 /**
  * Средняя
