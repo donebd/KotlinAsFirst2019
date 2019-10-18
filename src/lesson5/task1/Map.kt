@@ -186,6 +186,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     var answer = stockPrices.toMap().toMutableMap()
+    if (answer.containsKey("")) return answer
     for ((a) in answer) {
         answer[a] = stockPrices.filter { it.first == a }.sumBy { it.second.toInt() }.toDouble() / stockPrices.filter { it.first == a }.size
     }
