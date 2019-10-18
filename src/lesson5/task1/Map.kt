@@ -81,15 +81,6 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
     return res
 }
 
-fun main() {
-    val result = mutableMapOf<Int, Int>()
-    var x = result[2]
-    x = 2
-    result[2] = x
-    x++
-    print(result[2])
-}
-
 /**
  * Простая
  *
@@ -200,7 +191,6 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     }
     return answer
 }
-
 
 /**
  * Средняя
