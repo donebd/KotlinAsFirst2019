@@ -196,7 +196,6 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     return answer
 }
 
-
 /**
  * Средняя
  *
@@ -308,7 +307,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0..list.size - 2)
+        for (j in i until list.size) if (list[i] + list[j] == number) return Pair(i, j)
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная
