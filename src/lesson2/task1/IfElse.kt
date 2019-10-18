@@ -149,8 +149,7 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     if (a + b < c || a + c < b || b + c < a) return -1
-    var cosine = 0.0
-    cosine = when (maxOf(a, b, c)) {
+    val cosine = when (maxOf(a, b, c)) {
         a -> (sqr(b) + sqr(c) - sqr(a)) / 2 * b * c
         b -> (sqr(a) + sqr(c) - sqr(b)) / 2 * a * c
         else -> (sqr(a) + sqr(b) - sqr(c)) / 2 * a * b

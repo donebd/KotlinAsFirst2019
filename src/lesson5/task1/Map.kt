@@ -287,7 +287,16 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    var result = friends.toMutableMap()
+    for ((key, set) in friends)
+        for (name in set) {
+            if (result[name] == null) result[name] = setOf()
+            result[key] = result[name]!!.union(result[key]!!)
+            result[key] = result[key]!!.filter { it != key }.toSet()
+        }
+    return result
+}
 
 /**
  * Сложная
