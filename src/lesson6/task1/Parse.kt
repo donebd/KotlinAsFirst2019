@@ -90,7 +90,7 @@ fun dateStrToDigit(str: String): String {
         else -> ""
     }
     if (mounth == "" || daysInMonth(mounth.toInt(), days) < days) return ""
-    return String.format("%02d.%2s.%4s", days, mounth, date[2])
+    return String.format("%02d.%2s.%s", days, mounth, date[2])
 }
 
 /**
