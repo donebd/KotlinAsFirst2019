@@ -74,7 +74,7 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     if (date.size != 3) return ""
     val days = date[0].toInt()
-    val mounth = when (date[1]) {
+    val month = when (date[1]) {
         "января" -> 1
         "февраля" -> 2
         "марта" -> 3
@@ -89,8 +89,8 @@ fun dateStrToDigit(str: String): String {
         "декабря" -> 12
         else -> 0
     }
-    if (mounth == 0 || daysInMonth(mounth, date[2].toInt()) < days) return ""
-    return String.format("%02d.%02d.%s", days, mounth, date[2])
+    if (month == 0 || daysInMonth(month, date[2].toInt()) < days) return ""
+    return String.format("%02d.%02d.%s", days, month, date[2])
 }
 
 /**
