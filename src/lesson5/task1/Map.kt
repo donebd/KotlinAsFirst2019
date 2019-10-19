@@ -343,11 +343,13 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     var freeSlot = capacity
     val answer = mutableSetOf<String>()
+    var a = treasures.filter { it.value.first <= freeSlot && it.key !in answer }
+        .maxBy { it.value.second.toDouble() / it.value.first }
     while (treasures.filter { it.value.first <= freeSlot && it.key !in answer }.isNotEmpty()) {
-        var a = treasures.filter { it.value.first <= freeSlot && it.key !in answer }
-            .maxBy { it.value.second.toDouble() / it.value.first }
         freeSlot -= a!!.value.first
         answer.plusAssign(setOf(a.key))
+        a = treasures.filter { it.value.first <= freeSlot && it.key !in answer }
+            .maxBy { it.value.second.toDouble() / it.value.first }
     }
     return answer
 }
