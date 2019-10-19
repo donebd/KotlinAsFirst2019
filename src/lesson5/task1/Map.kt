@@ -344,9 +344,6 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var freeSlot = capacity
     val answer = mutableSetOf<String>()
     while (treasures.filter { it.value.first <= freeSlot && it.key !in answer }.isNotEmpty()) {
-        var cost = 0
-        var rate = 0.0
-        var nameTr = ""
         var a = treasures.filter { it.value.first <= freeSlot && it.key !in answer }
             .maxBy { it.value.second.toDouble() / it.value.first }
         freeSlot -= a!!.value.first
