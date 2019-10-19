@@ -2,8 +2,8 @@
 
 package lesson5.task1
 
-import java.lang.NullPointerException
-
+import javafx.scene.control.Separator
+import lesson3.task1.cos
 
 /**
  * Пример
@@ -343,4 +343,19 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    var freeSlot = capacity
+    val answer = mutableSetOf<String>()
+    while (treasures.filter { it.value.first <= freeSlot }.isNotEmpty()) {
+        var cost = 0
+        var rate: Double = 0.0
+        for ((name, pair) in treasures.filter { it.value.first <= freeSlot })
+            if (pair.second / pair.first > rate && pair.first > cost) {
+                rate = pair.second.toDouble() / pair.first
+                cost = pair.first
+            }
+        freeSlot -= cost
+        answer.plusAssign(setOf(treasures.filter { it.value.first == cost }.toMutableMap().keys.joinToString()))
+    }
+    return answer
+}
