@@ -348,9 +348,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         var rate = 0.0
         var nameTr = ""
         for ((name, pair) in treasures.filter { it.value.first <= freeSlot && it.key !in answer })
-            if (pair.second / pair.first > rate && pair.second > cost) {
+            if (pair.second / pair.first > rate && pair.first >= cost) {
                 rate = pair.second.toDouble() / pair.first
-                cost = pair.second
+                cost = pair.first
                 nameTr = name
             }
         freeSlot -= cost
