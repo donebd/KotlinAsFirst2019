@@ -75,22 +75,22 @@ fun dateStrToDigit(str: String): String {
     if (date.size != 3) return ""
     val days = date[0].toInt()
     val mounth = when (date[1]) {
-        "января" -> "01"
-        "февраля" -> "02"
-        "марта" -> "03"
-        "апреля" -> "04"
-        "мая" -> "05"
-        "июня" -> "06"
-        "июля" -> "07"
-        "августа" -> "08"
-        "сентября" -> "09"
-        "октября" -> "10"
-        "ноября" -> "11"
-        "декабря" -> "12"
-        else -> ""
+        "января" -> 1
+        "февраля" -> 2
+        "марта" -> 3
+        "апреля" -> 4
+        "мая" -> 5
+        "июня" -> 6
+        "июля" -> 7
+        "августа" -> 8
+        "сентября" -> 9
+        "октября" -> 10
+        "ноября" -> 11
+        "декабря" -> 12
+        else -> 0
     }
-    if (mounth == "" || daysInMonth(mounth.toInt(), days) < days) return ""
-    return String.format("%02d.%2s.%s", days, mounth, date[2])
+    if (mounth == 0 || daysInMonth(mounth, date[2].toInt()) < days) return ""
+    return String.format("%02d.%02d.%s", days, mounth, date[2])
 }
 
 /**
