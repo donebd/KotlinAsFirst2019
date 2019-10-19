@@ -349,13 +349,15 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     while (treasures.filter { it.value.first <= freeSlot }.isNotEmpty()) {
         var cost = 0
         var rate: Double = 0.0
+        var nameTr = ""
         for ((name, pair) in treasures.filter { it.value.first <= freeSlot })
             if (pair.second / pair.first > rate && pair.first > cost) {
                 rate = pair.second.toDouble() / pair.first
                 cost = pair.first
+                nameTr = name
             }
         freeSlot -= cost
-        answer.plusAssign(setOf(treasures.filter { it.value.first == cost }.toMutableMap().keys.joinToString()))
+        answer.plusAssign(setOf(nameTr))
     }
     return answer
 }
