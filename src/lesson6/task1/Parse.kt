@@ -74,7 +74,7 @@ fun dateStrToDigit(str: String): String {
     try {
         val date = str.split(" ")
         if (date.size != 3) return ""
-        val days = date[0].toInt()
+        val day = date[0].toInt()
         val month = when (date[1]) {
             "января" -> 1
             "февраля" -> 2
@@ -90,9 +90,9 @@ fun dateStrToDigit(str: String): String {
             "декабря" -> 12
             else -> 0
         }
-        if (month == 0 || daysInMonth(month, date[2].toInt()) < days) return ""
-        return String.format("%02d.%02d.%s", days, month, date[2])
-    } catch (e: NumberFormatException) {
+        if (month == 0 || daysInMonth(month, date[2].toInt()) < day) return ""
+        return String.format("%02d.%02d.%s", day, month, date[2])
+    } catch (e: Exception) {
         return ""
     }
 }
@@ -107,7 +107,32 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    try {
+        val date = digital.split(".")
+        if (date.size != 3) return ""
+        val day = date[0].toInt()
+        val month = when (date[1]) {
+            "01" -> "января"
+            "02" -> "февраля"
+            "03" -> "марта"
+            "04" -> "апреля"
+            "05" -> "мая"
+            "06" -> "июня"
+            "07" -> "июля"
+            "08" -> "августа"
+            "09" -> "сентября"
+            "10" -> "октября"
+            "11" -> "ноября"
+            "12" -> "декабря"
+            else -> ""
+        }
+        if (month == "" || daysInMonth(date[1].toInt(), date[2].toInt()) < day) return ""
+        return String.format("%d %s %s", day, month, date[2])
+    } catch (e: Exception) {
+        return ""
+    }
+}
 
 /**
  * Средняя
