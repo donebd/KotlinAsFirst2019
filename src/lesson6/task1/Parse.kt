@@ -163,7 +163,7 @@ fun flattenPhoneNumber(phone: String): String = TODO()
 fun bestLongJump(jumps: String): Int {
     if (Regex(pattern = """(\s*+\d+\s*+\d*+\s*+%*+\s*+-*+\s*)*""").replace(jumps, "") != "")
         return -1
-    val str = Regex(pattern = """\d{3}""").findAll(jumps).toList()
+    val str = Regex(pattern = """\d{3}""").findAll(jumps)
     val st = mutableListOf<Int>()
     for (i in str) st.add(i.value.toInt())
     return st.max()!!
