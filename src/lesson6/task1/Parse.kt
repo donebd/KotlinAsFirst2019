@@ -149,7 +149,11 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (Regex(pattern = """[\d\s()+-]""").replace(phone, "") != "" || phone == "" || phone.contains(Regex("""\(\s*\)""")))
+    if (Regex(pattern = """[\d\s()+-]""").replace(
+            phone,
+            ""
+        ) != "" || phone == "" || phone.contains(Regex("""\(\s*\)"""))
+    )
         return ""
     return Regex(pattern = """[\s()-]""").replace(phone, "")
 }
@@ -184,10 +188,19 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (Regex(pattern = """[\d\s-+%]""").replace(jumps, "") != "" || jumps == "" ||  !jumps.contains(Regex("""\d++\s*\+""")))
+    if (Regex(pattern = """[\d\s-+%]""").replace(
+            jumps,
+            ""
+        ) != "" || jumps == "" || !jumps.contains(Regex("""\d++\s*\+"""))
+    )
         return -1
     val str = mutableListOf<Int>()
-    for (i in Regex(pattern = """\d{3}""").findAll(Regex(pattern = """(\d*\s*%+-*)||(\d*\s*%+\+*)""").replace(jumps, ""))) str.add(i.value.toInt())
+    for (i in Regex(pattern = """\d{3}""").findAll(
+        Regex(pattern = """(\d*\s*%+-*)||(\d*\s*%+\+*)""").replace(
+            jumps,
+            ""
+        )
+    )) str.add(i.value.toInt())
     return if (str.max() != null) str.max()!! else -1
 }
 
@@ -211,7 +224,16 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val str = str.toLowerCase().split(" ")
+    var index = 1 + str[0].length
+    if (str.size > 1)
+        for (i in 1 until str.size) {
+            if (str[i - 1] == str[i]) return index - str[i].length -1
+            index += str[i].length + 1
+        }
+    return -1
+}
 
 /**
  * Сложная
