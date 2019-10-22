@@ -110,14 +110,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val threatFirst = kingX == rookX1 || kingY == rookY1
-    val threatSecond = kingX == rookX2 || kingY == rookY2
-    return when {
-        threatFirst && threatSecond -> 3
-        threatFirst -> 1
-        threatSecond -> 2
-        else -> 0
-    }
+    var answer = 0
+    if (kingX == rookX1 || kingY == rookY1) answer = 1
+    if (kingX == rookX2 || kingY == rookY2) answer += 2
+    return answer
 }
 
 
@@ -135,11 +131,11 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = when {
-    (kingX == rookX || kingY == rookY) && (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 3
-    kingX == rookX || kingY == rookY -> 1
-    abs(bishopX - kingX) == abs(bishopY - kingY) -> 2
-    else -> 0
+): Int {
+    var answer = 0
+    if (kingX == rookX || kingY == rookY) answer = 1
+    if (abs(bishopX - kingX) == abs(bishopY - kingY)) answer += 2
+    return answer
 }
 
 
