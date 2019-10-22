@@ -148,7 +148,11 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    if (Regex(pattern = """[\d\s()+-]""").replace(phone, "") != "" || phone == "" || phone.contains(Regex("""\(\s*\)""")))
+        return ""
+    return Regex(pattern = """[\s()-]""").replace(phone, "")
+}
 
 /**
  * Средняя
@@ -161,12 +165,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (Regex(pattern = """(\s*+\d+\s*+\d*+\s*+%*+\s*+-*+\s*)*""").replace(jumps, "") != "" || jumps == "")
+    if (Regex(pattern = """[\d\s-%]""").replace(jumps, "") != "" || jumps == "")
         return -1
-    val str = Regex(pattern = """\d{3}""").findAll(jumps)
     val st = mutableListOf<Int>()
-    for (i in str) st.add(i.value.toInt())
-    return st.max()!!
+    for (i in Regex(pattern = """\d{3}""").findAll(jumps)) st.add(i.value.toInt())
+    return if (st.max() != null) st.max()!! else -1
 }
 
 /**
