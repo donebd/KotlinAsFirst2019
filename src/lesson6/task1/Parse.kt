@@ -167,9 +167,9 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     if (Regex(pattern = """[\d\s-%]""").replace(jumps, "") != "" || jumps == "")
         return -1
-    val st = mutableListOf<Int>()
-    for (i in Regex(pattern = """\d{3}""").findAll(jumps)) st.add(i.value.toInt())
-    return if (st.max() != null) st.max()!! else -1
+    val str = mutableListOf<Int>()
+    for (i in Regex(pattern = """\d{3}""").findAll(jumps)) str.add(i.value.toInt())
+    return if (str.max() != null) str.max()!! else -1
 }
 
 /**
@@ -183,7 +183,13 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (Regex(pattern = """[\d\s-+%]""").replace(jumps, "") != "" || jumps == "" ||  !jumps.contains(Regex("""\d++\s*\+""")))
+        return -1
+    val str = mutableListOf<Int>()
+    for (i in Regex(pattern = """\d{3}""").findAll(Regex(pattern = """(\d*\s*%+-*)||(\d*\s*%+\+*)""").replace(jumps, ""))) str.add(i.value.toInt())
+    return if (str.max() != null) str.max()!! else -1
+}
 
 /**
  * Сложная
