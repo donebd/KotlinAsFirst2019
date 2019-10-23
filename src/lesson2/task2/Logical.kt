@@ -67,9 +67,9 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val firstside = min(a, b)
-    val secondside = if (firstside == a) min(b, c) else min(a, c)
-    return (firstside <= r && secondside <= s || (firstside <= s && secondside <= r))
+    val firstSide = min(a, b)
+    val secondSide = if (firstSide == a) min(b, c) else min(a, c)
+    return (firstSide <= r && secondSide <= s || (firstSide <= s && secondSide <= r))
 }
 
 
