@@ -110,8 +110,7 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    var answer = 0
-    if (kingX == rookX1 || kingY == rookY1) answer = 1
+    var answer = if (kingX == rookX1 || kingY == rookY1) 1 else 0
     if (kingX == rookX2 || kingY == rookY2) answer += 2
     return answer
 }
@@ -132,8 +131,7 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    var answer = 0
-    if (kingX == rookX || kingY == rookY) answer = 1
+    var answer = if (kingX == rookX || kingY == rookY) 1 else 0
     if (abs(bishopX - kingX) == abs(bishopY - kingY)) answer += 2
     return answer
 }
