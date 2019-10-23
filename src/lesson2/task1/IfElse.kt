@@ -72,7 +72,6 @@ fun ageDescription(age: Int): String = when {
     else -> "$age лет"
 }
 
-
 /**
  * Простая
  *
@@ -115,7 +114,6 @@ fun whichRookThreatens(
     return answer
 }
 
-
 /**
  * Простая
  *
@@ -135,7 +133,6 @@ fun rookOrBishopThreatens(
     if (abs(bishopX - kingX) == abs(bishopY - kingY)) answer += 2
     return answer
 }
-
 
 /**
  * Простая
