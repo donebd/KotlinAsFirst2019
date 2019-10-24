@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import jdk.nashorn.internal.objects.NativeArray.indexOf
 import lesson2.task2.daysInMonth
 
 /**
@@ -196,7 +197,7 @@ fun bestHighJump(jumps: String): Int {
         return -1
     val str = mutableListOf<Int>()
     for (i in Regex(pattern = """\d{3}""").findAll(
-        Regex(pattern = """(\d*\s*%+-*)||(\d*\s*%+\+*)""").replace(
+        Regex(pattern = """(\d*\s*%+-*)|(\d*\s*%+\+*)""").replace(
             jumps,
             ""
         )
@@ -229,7 +230,7 @@ fun firstDuplicateIndex(str: String): Int {
     var index = 1 + str[0].length
     if (str.size > 1)
         for (i in 1 until str.size) {
-            if (str[i - 1] == str[i]) return index - str[i].length -1
+            if (str[i - 1] == str[i]) return index - str[i].length - 1
             index += str[i].length + 1
         }
     return -1
@@ -297,4 +298,41 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var limitVar = limit
+    var count = 0
+    var index = cells / 2
+    val cycle = IntArray(6) { 0 }
+    val cycleIndex = IntArray(commands.length) { 0 }
+    var sensorLoop = 0
+    val array = IntArray(cells) { 0 }
+    while (count < commands.length) {
+        if (commands[count] == '[') {
+            sensorLoop++
+            cycle[sensorLoop] = count
+        }
+        if (commands[count] == ']') {
+            cycleIndex[count] = cycle[sensorLoop]
+            cycleIndex[cycle[sensorLoop]] = count
+            sensorLoop--
+        }
+        count++
+    }
+    count = 0
+    while (count < limitVar && count < commands.length) {
+        when (commands[count]) {
+            '+' -> array[index]++
+            '-' -> array[index]--
+            '>' -> index++
+            '<' -> index--
+            '[' -> if (array[index] == 0) count = cycleIndex[count]
+            ']' -> if (array[index] != 0) {
+                limitVar -= (count - cycleIndex[count])
+                count = cycleIndex[count]
+            }
+            else -> limitVar--
+        }
+        count++
+    }
+    return array.toList()
+}
