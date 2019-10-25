@@ -312,11 +312,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             sensorLoop++
             cycle[sensorLoop] = count
         }
-        if (commands[count] == ']' && sensorLoop > 0) {
+        if (commands[count] == ']') if (sensorLoop > 0) {
             cycleIndex[count] = cycle[sensorLoop]
             cycleIndex[cycle[sensorLoop]] = count
             sensorLoop--
-        }
+        } else throw IllegalArgumentException()//проверка на неправильное расположение скобок
         count++
     }
     if (sensorLoop != 0) throw IllegalArgumentException()//проверка на незакрытые скобки
