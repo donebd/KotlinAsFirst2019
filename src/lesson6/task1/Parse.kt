@@ -327,7 +327,10 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '-' -> array[index]--
             '>' -> if (index == cells - 1) throw IllegalStateException() else index++
             '<' -> if (index == 0) throw IllegalStateException() else index--
-            '[' -> if (array[index] == 0) count = cycleIndex[count]
+            '[' -> if (array[index] == 0) {
+                limitVar += cycleIndex[count] - count
+                count = cycleIndex[count]
+            }
             else -> if (commands[count] == ']' && array[index] != 0) {
                 limitVar -= (count - cycleIndex[count])
                 count = cycleIndex[count]
