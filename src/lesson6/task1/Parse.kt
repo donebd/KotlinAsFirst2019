@@ -2,7 +2,6 @@
 
 package lesson6.task1
 
-import jdk.nashorn.internal.objects.NativeArray.indexOf
 import lesson2.task2.daysInMonth
 
 /**
@@ -300,6 +299,7 @@ fun fromRoman(roman: String): Int = TODO()
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (Regex(pattern = """[\s+><\-\[\]]""").replace(commands, "") != "") throw IllegalArgumentException()
+    //проверка на лишние символы
     var limitVar = limit
     var count = 0
     var index = cells / 2
@@ -307,20 +307,21 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     val cycleIndex = IntArray(commands.length) { 0 }
     var sensorLoop = 0
     val array = IntArray(cells) { 0 }
-    while (count < commands.length) {
+    while (count < commands.length) {// цикл для сопоставления скобок
         if (commands[count] == '[') {
             sensorLoop++
             cycle[sensorLoop] = count
         }
-        if (commands[count] == ']') {
+        if (commands[count] == ']' && sensorLoop > 0) {
             cycleIndex[count] = cycle[sensorLoop]
             cycleIndex[cycle[sensorLoop]] = count
             sensorLoop--
         }
         count++
     }
+    if (sensorLoop != 0) throw IllegalArgumentException()//проверка на незакрытые скобки
     count = 0
-    while (count < limitVar && count < commands.length) {
+    while (count < limitVar && count < commands.length) {//действия датчика
         when (commands[count]) {
             '+' -> array[index]++
             '-' -> array[index]--
