@@ -302,24 +302,24 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     //проверка на лишние символы
     var limitVar = limit
     var count = 0
-    var index = cells / 2
-    val cycle = IntArray(commands.length / 2 + 2) { 0 }
-    val cycleIndex = IntArray(commands.length) { 0 }
-    var sensorLoop = 0
-    val array = IntArray(cells) { 0 }
+    var index = 0//сначало используется для определения соответсвующих скобок
+    val cycle = IntArray(commands.length / 2 + 2) { 0 }//вспомогательный массив для сохранение индексов [
+    val cycleIndex = IntArray(commands.length) { 0 }//массив с сопоставленными [] и их индексами
     while (count < commands.length) {// цикл для сопоставления скобок
         if (commands[count] == '[') {
-            sensorLoop++
-            cycle[sensorLoop] = count
+            index++
+            cycle[index] = count
         }
-        if (commands[count] == ']') if (sensorLoop > 0) {
-            cycleIndex[count] = cycle[sensorLoop]
-            cycleIndex[cycle[sensorLoop]] = count
-            sensorLoop--
+        if (commands[count] == ']') if (index > 0) {
+            cycleIndex[count] = cycle[index]
+            cycleIndex[cycle[index]] = count
+            index--
         } else throw IllegalArgumentException()//проверка на неправильное расположение скобок
         count++
     }
-    if (sensorLoop != 0) throw IllegalArgumentException()//проверка на незакрытые скобки
+    if (index != 0) throw IllegalArgumentException()//проверка на незакрытые скобки
+    val array = IntArray(cells) { 0 }//массив ячеек
+    index = cells / 2//положение датчика
     count = 0
     while (count < limitVar && count < commands.length) {//действия датчика
         when (commands[count]) {
