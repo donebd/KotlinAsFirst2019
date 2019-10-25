@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.pow
+
 /**
  * Пример
  *
@@ -335,10 +337,30 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
  *     850
  *   ) -> setOf("Кубок")
- *   bagPacking(
- *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
- *     450
- *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
-
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val answerTmp = mutableSetOf<String>()
+    val answer = mutableSetOf<String>()
+    var maxCost = 0
+    for (arrNum in 0 until 2.0.pow(treasures.size).toInt()) {
+        var wNum = 0
+        var costNum = 0
+        var j = 0
+        for ((i) in treasures) {
+            var mask = 1 shl j
+            j++
+            if (arrNum and mask > 0) {
+                answerTmp.add(i)
+                wNum += treasures[i]!!.first
+                costNum += treasures[i]!!.second
+            }
+        }
+        if (wNum <= capacity && costNum > maxCost) {
+            maxCost = costNum
+            answer.clear()
+            answer.addAll(answerTmp)
+        }
+        answerTmp.clear()
+    }
+    return answer
+}
