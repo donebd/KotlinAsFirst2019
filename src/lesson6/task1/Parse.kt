@@ -299,6 +299,7 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    if (Regex(pattern = """[\s+><\-\[\]]""").replace(commands, "") != "") throw IllegalArgumentException()
     var limitVar = limit
     var count = 0
     var index = cells / 2
@@ -323,14 +324,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         when (commands[count]) {
             '+' -> array[index]++
             '-' -> array[index]--
-            '>' -> index++
-            '<' -> index--
+            '>' -> if (index == cells - 1) throw IllegalStateException() else index++
+            '<' -> if (index == 0) throw IllegalStateException() else index--
             '[' -> if (array[index] == 0) count = cycleIndex[count]
-            ']' -> if (array[index] != 0) {
+            else -> if (commands[count] == ']' && array[index] != 0) {
                 limitVar -= (count - cycleIndex[count])
                 count = cycleIndex[count]
             }
-            else -> limitVar--
         }
         count++
     }
