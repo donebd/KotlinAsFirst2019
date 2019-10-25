@@ -303,7 +303,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var limitVar = limit
     var count = 0
     var index = cells / 2
-    val cycle = IntArray(cells) { 0 }
+    val cycle = IntArray(commands.length) { 0 }
     val cycleIndex = IntArray(commands.length) { 0 }
     var sensorLoop = 0
     val array = IntArray(cells) { 0 }
