@@ -339,6 +339,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> setOf("Кубок")
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    if (treasures.isEmpty()) return setOf("")
     val pair = Array(2) { Array(treasures.size) { 0 } }//переводим значения мап в массив
     var k = 0
     for ((i, j) in treasures) {
