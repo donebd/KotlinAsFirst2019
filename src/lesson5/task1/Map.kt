@@ -339,28 +339,39 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> setOf("Кубок")
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val answerTmp = mutableSetOf<String>()
-    val answer = mutableSetOf<String>()
-    var maxCost = 0
-    for (arrNum in 0 until 2.0.pow(treasures.size).toInt()) {
-        var wNum = 0
-        var costNum = 0
-        var j = 0
-        for ((i) in treasures) {
-            var mask = 1 shl j
-            j++
-            if (arrNum and mask > 0) {
-                answerTmp.add(i)
-                wNum += treasures[i]!!.first
-                costNum += treasures[i]!!.second
-            }
-        }
-        if (wNum <= capacity && costNum > maxCost) {
-            maxCost = costNum
-            answer.clear()
-            answer.addAll(answerTmp)
-        }
-        answerTmp.clear()
+    val pair = Array(2) { Array(treasures.size) { 0 } }//переводим значения мап в массив
+    var k = 0
+    for ((i, j) in treasures) {
+        pair[0][k] = j.first
+        pair[1][k] = j.second
+        k++
     }
-    return answer
+
+    val resultArray =
+        Array(capacity + 1) { Array(treasures.size) { 0 to mutableListOf<Int>() } }//столбик массы строка предмета ячейки это пары ценности и номера предмета по порядку
+    for (i in 1..capacity) {//заполняем первый столбик ценности по весу одного предмета
+        if (i >= pair[0][0]) resultArray[i][0] = pair[1][0] to mutableListOf(0)
+    }
+
+    for (j in 1 until treasures.size)//заполняем остальную таблицу
+        for (i in 1..capacity) {
+            if (i - pair[0][j] >= 0)
+                if (resultArray[i][j - 1].first > pair[1][j] + resultArray[i - pair[0][j]][j - 1].first)
+                    resultArray[i][j] = resultArray[i][j - 1]
+                else resultArray[i][j] =
+                    (pair[1][j] + resultArray[i - pair[0][j]][j - 1].first) to ((mutableListOf(j) + resultArray[i - pair[0][j]][j - 1].second).toMutableList())
+            else resultArray[i][j] = resultArray[i][j - 1]
+        }
+
+    val answerSet = mutableSetOf<String>()//сопоставляем получившийся список номеров по порядку с мапом
+    for (i in resultArray[capacity][treasures.size - 1].second) {
+        k = 0
+        for ((j) in treasures) {
+            if (k == i) answerSet.add(j)
+            k++
+        }
+    }
+
+    return answerSet
+
 }
