@@ -149,10 +149,10 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (Regex(pattern = """[\d\s()+-]""").replace(
-            phone,
-            ""
-        ) != "" || phone == "" || phone.contains(Regex("""\(\s*\)"""))
+    if (Regex(pattern = """[\d\s()+-]""").replace(phone, "") != ""
+        || phone == ""
+        || phone.contains(Regex("""\(\s*\)"""))
+        || Regex(pattern = """[\s]""").replace(phone, "") == "+"
     )
         return ""
     return Regex(pattern = """[\s()-]""").replace(phone, "")
@@ -188,19 +188,14 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (Regex(pattern = """[\d\s-+%]""").replace(
-            jumps,
-            ""
-        ) != "" || jumps == "" || !jumps.contains(Regex("""\d++\s*\+"""))
+    if (Regex(pattern = """[\d\s-+%]""").replace(jumps, "") != "" ||
+        jumps == "" || !jumps.contains(Regex("""\d++\s*\+"""))
     )
         return -1
     val str = mutableListOf<Int>()
-    for (i in Regex(pattern = """\d{3}""").findAll(
-        Regex(pattern = """(\d*\s*%+-*)|(\d*\s*%+\+*)""").replace(
-            jumps,
-            ""
-        )
-    )) str.add(i.value.toInt())
+    for (i in
+    Regex(pattern = """\d{3}""").findAll(Regex(pattern = """(\d*\s*%+-*)|(\d*\s*%+\+*)""").replace(jumps, "")))
+        str.add(i.value.toInt())
     return if (str.max() != null) str.max()!! else -1
 }
 
