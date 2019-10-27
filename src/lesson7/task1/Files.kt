@@ -85,7 +85,30 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val chage =
+        listOf(
+            "жы", "жЫ", "Жы", "ЖЫ", "жя", "жЯ", "Жя", "ЖЯ", "жю", "жЮ", "Жю", "ЖЮ",
+            "чы", "чЫ", "Чы", "ЧЫ", "чя", "чЯ", "Чя", "ЧЯ", "чю", "чЮ", "Чю", "ЧЮ",
+            "шы", "шЫ", "Шы", "ШЫ", "шя", "шЯ", "Шя", "ШЯ", "шю", "шЮ", "Шю", "ШЮ",
+            "щы", "щЫ", "Щы", "ЩЫ", "щя", "щЯ", "Щя", "ЩЯ", "щю", "щЮ", "Щю", "ЩЮ"
+        )
+    val chage1 =
+        listOf(
+            "жи", "жИ", "Жи", "ЖИ", "жа", "жА", "Жа", "ЖА", "жу", "жУ", "Жу", "ЖУ",
+            "чи", "чИ", "Чи", "ЧИ", "ча", "чА", "Ча", "ЧА", "чу", "чУ", "Чу", "ЧУ",
+            "ши", "шИ", "Ши", "ШИ", "ша", "шА", "Ша", "ША", "шу", "шУ", "Шу", "ШУ",
+            "щи", "щИ", "Щи", "ЩИ", "ща", "щА", "Ща", "ЩА", "щу", "щУ", "Щу", "ЩУ"
+        )
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            var newLine = line
+            for (i in 0 until chage.size) {
+                while (Regex(chage[i]).find(newLine)?.value != null) newLine = newLine.replace(chage[i], chage1[i])
+            }
+            it.write(newLine)
+            it.newLine()
+        }
+    }
 }
 
 /**
