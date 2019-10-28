@@ -296,7 +296,66 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val edit = listOf("**", "*", "~~")
+    val editOpen = listOf("<b>", "<i>", "<s>")
+    val editClose = listOf("</b>", "</i>", "</s>")
+    File(outputName).bufferedWriter().use {
+        it.write("<html>")
+        it.newLine()
+        it.write("<body>")
+        it.newLine()
+        it.write("<p>")
+        val checkArr = arrayOf(0, 0, 0)
+        for (line in File(inputName).readLines()) {
+            var newLine = line
+            if (newLine == "") {
+                it.write("</p>")
+                it.newLine()
+                it.write("<p>")
+                it.newLine()
+            } else {
+                for (i in 0 until edit.size) {
+
+                    when (i) {
+                        0 -> while (Regex("""\*\*""").find(newLine)?.value != null) {
+                            if (checkArr[i] == 0) {
+                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
+                                checkArr[i] = 1
+                            } else {
+                                newLine = newLine.replaceFirst(edit[i], editClose[i])
+                                checkArr[i] = 0
+                            }
+                        }
+                        1 -> while (Regex("""\*""").find(newLine)?.value != null) {
+                            if (checkArr[i] == 0) {
+                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
+                                checkArr[i] = 1
+                            } else {
+                                newLine = newLine.replaceFirst(edit[i], editClose[i])
+                                checkArr[i] = 0
+                            }
+                        }
+                        2 -> while (Regex("""~~""").find(newLine)?.value != null) {
+                            if (checkArr[i] == 0) {
+                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
+                                checkArr[i] = 1
+                            } else {
+                                newLine = newLine.replaceFirst(edit[i], editClose[i])
+                                checkArr[i] = 0
+                            }
+                        }
+                    }
+
+                }
+                it.write(newLine)
+                it.newLine()
+            }
+        }
+        it.write("</p>")
+        it.write("</body>")
+        it.newLine()
+        it.write("</html>")
+    }
 }
 
 /**
