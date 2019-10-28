@@ -305,15 +305,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write("<body>")
         it.newLine()
         it.write("<p>")
+        var k = 0
         val checkArr = arrayOf(0, 0, 0)
         for (line in File(inputName).readLines()) {
             var newLine = line
-            if (newLine == "") {
+            if (newLine == "" && k !=0) {
                 it.write("</p>")
                 it.newLine()
                 it.write("<p>")
                 it.newLine()
-            } else {
+            } else { k ++
                 for (i in 0 until edit.size) {
 
                     when (i) {
