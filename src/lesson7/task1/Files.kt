@@ -318,7 +318,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.newLine()
             } else {
                 k++
-                for (i in 0 until edit.size) {
+                for (i in edit.indices) {
 
                     when (i) {
                         0 -> while (Regex("""\*\*""").find(newLine)?.value != null) {
@@ -552,14 +552,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.write("$space-$resultTemp   $result")
             it.newLine()
             if (lhv.toString().length == resultTemp.length) {
-                it.write("$separator")
+                it.write(separator)
                 it.newLine()
                 it.write(" ${lhv % rhv}")
-            }
-            else {
+            } else {
                 it.write(" $separator")
                 it.newLine()
-                space = " ".repeat(separator.length - (lhv % rhv).toString().length+1)
+                space = " ".repeat(separator.length - (lhv % rhv).toString().length + 1)
                 it.write("$space${lhv % rhv}")
             }
         } else {
@@ -593,7 +592,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     countSpace--
                     space = space.substring(0, space.length - 1)
                     countSeparate++
-                } else if (countSpace + resultTemp.length + 1 != countSpace + remain.length) for (j in countSpace..remain.length - resultTemp.length) space += " "
+                } else while (space.length + resultTemp.length + 1 < countSpace + remain.length) space += " "
                 separator = "-".repeat(countSeparate)
                 it.run {
                     write("$space-$resultTemp")
