@@ -611,7 +611,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 0 -> for (i in 1 until countSeparate) space += " "
                 2 -> for (i in 2 until countSpace + countSeparate) space += " "
                 4 -> for (i in 1..countSpace) space += " "
-                else -> for (i in 1 until countSpace + countSeparate) space += " "
+                else -> for (i in 0..countSpace + countSeparate - remain.length) space += " "
             }
             it.run { write("$space${lhv % rhv}") }
         }
