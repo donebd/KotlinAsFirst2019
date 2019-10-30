@@ -537,19 +537,23 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         it.write(" $lhv | $rhv")//блок первичных операций
         it.newLine()
-        var countSpace = resultTemp.length + 1
-        var space = " ".repeat(lhv.toString().length - countSpace + 4)
+        var countSpace = resultTemp.length + 1//var space = " ".repeat(lhv.toString().length - countSpace + 4)
+        var space = ""
         var countSeparate = countSpace
         var separator = "-".repeat(countSeparate)
 
-        if (newLhv.length - resultTemp.length == 1 && result.length == 1) {
-            it.write(" -$resultTemp${space.substring(0, space.length - 1)}$result")
+        if (result.length == 1) {
+            space = " ".repeat(lhv.toString().length - resultTemp.length)
+            separator = if (lhv.toString().length == resultTemp.length) "-".repeat(lhv.toString().length+1)
+            else "-".repeat(lhv.toString().length)
+            it.write("$space-$resultTemp   $result")
             it.newLine()
             it.write(" $separator")
             it.newLine()
-            space = " ".repeat(countSpace)
+            space = " ".repeat(separator.length - (lhv % rhv).toString().length+1)
             it.write("$space${lhv % rhv}")
         } else {
+            space = " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
             it.newLine()
             it.write(separator)
