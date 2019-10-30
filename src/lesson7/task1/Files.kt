@@ -543,7 +543,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         for (i in 0..lhv.toString().length - countSpace) space += " "
         var countSeparate = countSpace
         for (i in 1..countSeparate) separator += "-"
-        if (newLhv.length - resultTemp.length == 1) {
+        if (newLhv.length - resultTemp.length == 1 && result.toString().length == 1) {
             it.write(" -$resultTemp${space.substring(0, space.length - 1)}$result")
             it.newLine()
             it.write(" $separator")
