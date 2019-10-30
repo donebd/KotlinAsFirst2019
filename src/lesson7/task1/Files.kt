@@ -531,8 +531,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var newLhv = lhv.toString()
     val result = (lhv / rhv).toString()
     var resultTemp = ((result[0].toInt() - 48) * rhv).toString()
-    var space = "   "
-    var separator = ""
     var partLhv = lhv.toString()
     var checker = 0
     File(outputName).bufferedWriter().use {
@@ -540,41 +538,38 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write(" $lhv | $rhv")//блок первичных операций
         it.newLine()
         var countSpace = resultTemp.length + 1
-        for (i in 0..lhv.toString().length - countSpace) space += " "
+        var space = " ".repeat(lhv.toString().length - countSpace + 4)
         var countSeparate = countSpace
-        for (i in 1..countSeparate) separator += "-"
-        if (newLhv.length - resultTemp.length == 1 && result.toString().length == 1) {
+        var separator = "-".repeat(countSeparate)
+
+        if (newLhv.length - resultTemp.length == 1 && result.length == 1) {
             it.write(" -$resultTemp${space.substring(0, space.length - 1)}$result")
             it.newLine()
             it.write(" $separator")
             it.newLine()
-            space = ""
-            for (i in 1..countSpace) space += " "
+            space = " ".repeat(countSpace)
             it.write("$space${lhv % rhv}")
-            checker = 3
         } else {
             it.write("-$resultTemp$space$result")
             it.newLine()
             it.write(separator)
-        }
-        it.newLine()
-        space = ""
-        separator = ""
-        partLhv = partLhv.substring(0, countSpace - 1)
-        newLhv = newLhv.replaceFirst(partLhv, "")
-        var remain = (partLhv.toInt() - resultTemp.toInt()).toString()
-        countSpace -= remain.length
+            it.newLine()
+            partLhv = partLhv.substring(0, countSpace - 1)
+            newLhv = newLhv.replaceFirst(partLhv, "")
+            var remain = (partLhv.toInt() - resultTemp.toInt()).toString()
+            countSpace = 0
+            space = ""
 
-        if (checker != 3) {
             for (i in 1 until result.length) {//блок последующих операций
-                checker = 1
                 if (i != 1) remain = (remain.toInt() - resultTemp.toInt()).toString()
+                checker = 1
+                countSpace += countSeparate - remain.length
                 if (remain.toInt() < rhv && i != result.length) {
                     remain += newLhv[0]
                     newLhv = newLhv.substring(1, newLhv.length)
                     countSeparate = remain.length
                 }
-                for (j in 1..countSpace) space += " "
+                space = " ".repeat(countSpace)
                 it.run {
                     write("$space$remain")
                     newLine()
@@ -584,34 +579,24 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     countSpace--
                     space = space.substring(0, space.length - 1)
                     countSeparate++
-                    checker = 4
-                }
-                for (j in 1..countSeparate) separator += "-"
+                } else if (countSpace + resultTemp.length + 1 != countSpace + remain.length) for (j in countSpace..remain.length - resultTemp.length) space += " "
+                separator = "-".repeat(countSeparate)
                 it.run {
                     write("$space-$resultTemp")
                     newLine()
                 }
-                if (remain[0].toInt() - 48 == 0) {
-                    countSpace++
-                    checker = 2
-                }
-                it.run {
-                    write("$space$separator")
-                    newLine()
-                }
-                if (checker == 4) {
-                    countSpace += remain.length - (remain.toInt() - resultTemp.toInt()).toString().length + 1
-                }
-                separator = ""
+
+                space = " ".repeat(countSpace)
+                it.write("$space$separator")
+                it.newLine()
+
                 space = ""
             }
 
-
+            if (checker == 0) countSpace = 0
             when (checker) {
-                0 -> for (i in 1 until countSeparate) space += " "
                 2 -> for (i in 2 until countSpace + countSeparate) space += " "
-                4 -> for (i in 1..countSpace) space += " "
-                else -> for (i in 0..countSpace + countSeparate - remain.length) space += " "
+                else -> for (i in 1..countSpace + countSeparate - (lhv % rhv).toString().length) space += " "
             }
             it.run { write("$space${lhv % rhv}") }
         }
