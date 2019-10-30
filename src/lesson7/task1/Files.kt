@@ -544,14 +544,24 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         if (result.length == 1) {
             space = " ".repeat(lhv.toString().length - resultTemp.length)
-            separator = if (lhv.toString().length == resultTemp.length) "-".repeat(lhv.toString().length+1)
-            else "-".repeat(lhv.toString().length)
+            separator = "-".repeat(lhv.toString().length)
+            if (lhv.toString().length == resultTemp.length) {
+                separator = "-".repeat(lhv.toString().length + 1)
+                space = ""
+            } else separator = "-".repeat(lhv.toString().length)
             it.write("$space-$resultTemp   $result")
             it.newLine()
-            it.write(" $separator")
-            it.newLine()
-            space = " ".repeat(separator.length - (lhv % rhv).toString().length+1)
-            it.write("$space${lhv % rhv}")
+            if (lhv.toString().length == resultTemp.length) {
+                it.write("$separator")
+                it.newLine()
+                it.write(" ${lhv % rhv}")
+            }
+            else {
+                it.write(" $separator")
+                it.newLine()
+                space = " ".repeat(separator.length - (lhv % rhv).toString().length+1)
+                it.write("$space${lhv % rhv}")
+            }
         } else {
             space = " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
