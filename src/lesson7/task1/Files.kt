@@ -311,7 +311,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         for ((count, line) in File(inputName).readLines().withIndex()) {
             if (line == "" && line == newLine) k = 0
             newLine = line
-            if ((newLine == "" || newLine == "\n") && k != 0 && count != File(inputName).readLines().size) {
+            if ((newLine == "" || newLine == "\n") && k != 0 && count < File(inputName).readLines().size - 1) {
                 it.write("</p>")
                 it.newLine()
                 it.write("<p>")
@@ -584,6 +584,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     countSpace--
                     space = space.substring(0, space.length - 1)
                     countSeparate++
+                    checker = 4
                 }
                 for (j in 1..countSeparate) separator += "-"
                 it.run {
@@ -598,6 +599,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     write("$space$separator")
                     newLine()
                 }
+                if (checker == 4) {
+                    countSpace += remain.length - (remain.toInt() - resultTemp.toInt()).toString().length + 1
+                }
                 separator = ""
                 space = ""
             }
@@ -606,6 +610,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             when (checker) {
                 0 -> for (i in 1 until countSeparate) space += " "
                 2 -> for (i in 2 until countSpace + countSeparate) space += " "
+                4 -> for (i in 1..countSpace) space += " "
                 else -> for (i in 1 until countSpace + countSeparate) space += " "
             }
             it.run { write("$space${lhv % rhv}") }
