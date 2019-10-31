@@ -59,10 +59,9 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
         var k = 0
         for (line in File(inputName).readLines()) {
             var j = 0
-            var i = 0
             while (Regex(subWord.toLowerCase()).find(line.toLowerCase(), j)?.value != null) {
                 k++
-                i = line.toLowerCase().indexOf(subWord.toLowerCase(), j)
+                val i = line.toLowerCase().indexOf(subWord.toLowerCase(), j)
                 j = i + 1
             }
         }
@@ -102,8 +101,8 @@ fun sibilants(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         for (line in File(inputName).readLines()) {
             var newLine = line
-            for (i in 0 until chage.size) {
-                while (Regex(chage[i]).find(newLine)?.value != null) newLine = newLine.replace(chage[i], chage1[i])
+            for (i in chage.indices) {
+                while (newLine.contains(chage[i])) newLine = newLine.replace(chage[i], chage1[i])
             }
             it.write(newLine)
             it.newLine()
@@ -295,6 +294,14 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
+fun main() {
+    val a = "**1354**4"
+    val b = "**"
+    val c = a.contains(b)
+    print(c)
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val edit = listOf("**", "*", "~~")
     val editOpen = listOf("<b>", "<i>", "<s>")
@@ -315,45 +322,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.write("</p>")
                 it.newLine()
                 it.write("<p>")
-                it.newLine()
             } else {
                 k++
-                for (i in edit.indices) {
-
-                    when (i) {
-                        0 -> while (Regex("""\*\*""").find(newLine)?.value != null) {
-                            if (checkArr[i] == 0) {
-                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
-                                checkArr[i] = 1
-                            } else {
-                                newLine = newLine.replaceFirst(edit[i], editClose[i])
-                                checkArr[i] = 0
-                            }
+                for (i in edit.indices)
+                    while (newLine.contains(edit[i]))
+                        if (checkArr[i] == 0) {
+                            newLine = newLine.replaceFirst(edit[i], editOpen[i])
+                            checkArr[i] = 1
+                        } else {
+                            newLine = newLine.replaceFirst(edit[i], editClose[i])
+                            checkArr[i] = 0
                         }
-                        1 -> while (Regex("""\*""").find(newLine)?.value != null) {
-                            if (checkArr[i] == 0) {
-                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
-                                checkArr[i] = 1
-                            } else {
-                                newLine = newLine.replaceFirst(edit[i], editClose[i])
-                                checkArr[i] = 0
-                            }
-                        }
-                        2 -> while (Regex("""~~""").find(newLine)?.value != null) {
-                            if (checkArr[i] == 0) {
-                                newLine = newLine.replaceFirst(edit[i], editOpen[i])
-                                checkArr[i] = 1
-                            } else {
-                                newLine = newLine.replaceFirst(edit[i], editClose[i])
-                                checkArr[i] = 0
-                            }
-                        }
-                    }
-
-                }
                 it.write(newLine)
-                it.newLine()
             }
+            it.newLine()
         }
         it.write("</p>")
         it.write("</body>")
@@ -551,16 +533,15 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             } else separator = "-".repeat(lhv.toString().length)
             it.write("$space-$resultTemp   $result")
             it.newLine()
-            if (lhv.toString().length == resultTemp.length) {
+            countSpace = if (lhv.toString().length == resultTemp.length) {
                 it.write(separator)
-                it.newLine()
-                it.write(" ${lhv % rhv}")
+                separator.length - (lhv % rhv).toString().length
             } else {
                 it.write(" $separator")
-                it.newLine()
-                space = " ".repeat(separator.length - (lhv % rhv).toString().length + 1)
-                it.write("$space${lhv % rhv}")
+                separator.length - (lhv % rhv).toString().length + 1
             }
+            it.newLine()
+            it.write("${" ".repeat(countSpace)}${lhv % rhv}")
         } else {
             space = " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
