@@ -295,13 +295,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 
-fun main() {
-    val a = "**1354**4"
-    val b = "**"
-    val c = a.contains(b)
-    print(c)
-}
-
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val edit = listOf("**", "*", "~~")
     val editOpen = listOf("<b>", "<i>", "<s>")
@@ -316,25 +309,26 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var newLine = ""
         val checkArr = arrayOf(0, 0, 0)
         for ((count, line) in File(inputName).readLines().withIndex()) {
-            if (line == "" && line == newLine) k = 0
-            newLine = line
-            if ((newLine == "" || newLine == "\n") && k != 0 && count < File(inputName).readLines().size - 1) {
+            if ((line == "" || line == "\\n" && newLine == "" || newLine == "\\n")
+                || (newLine != line && (line != "" && line != "\\n" && newLine != "" && newLine != "\\n"))
+            ) k = 0
+            if (k != 0 && count != File(inputName).readLines().size) {
                 it.write("</p>")
                 it.newLine()
                 it.write("<p>")
-            } else {
-                k++
-                for (i in edit.indices)
-                    while (newLine.contains(edit[i]))
-                        if (checkArr[i] == 0) {
-                            newLine = newLine.replaceFirst(edit[i], editOpen[i])
-                            checkArr[i] = 1
-                        } else {
-                            newLine = newLine.replaceFirst(edit[i], editClose[i])
-                            checkArr[i] = 0
-                        }
-                it.write(newLine)
-            }
+            } else k++
+            newLine = line
+            for (i in edit.indices)
+                while (newLine.contains(edit[i]))
+                    if (checkArr[i] == 0) {
+                        newLine = newLine.replaceFirst(edit[i], editOpen[i])
+                        checkArr[i] = 1
+                    } else {
+                        newLine = newLine.replaceFirst(edit[i], editClose[i])
+                        checkArr[i] = 0
+                    }
+            it.write(newLine)
+
             it.newLine()
         }
         it.write("</p>")
@@ -516,32 +510,42 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var partLhv = lhv.toString()
     var checker = 0
     File(outputName).bufferedWriter().use {
-
-        it.write(" $lhv | $rhv")//блок первичных операций
+        if (result == "0" && lhv.toString().length > 1) it.write("$lhv | $rhv")
+        else it.write(" $lhv | $rhv")//блок первичных операций
         it.newLine()
-        var countSpace = resultTemp.length + 1//var space = " ".repeat(lhv.toString().length - countSpace + 4)
+        var countSpace = resultTemp.length + 1
         var space = ""
         var countSeparate = countSpace
         var separator = "-".repeat(countSeparate)
 
         if (result.length == 1) {
-            space = " ".repeat(lhv.toString().length - resultTemp.length)
-            separator = "-".repeat(lhv.toString().length)
-            if (lhv.toString().length == resultTemp.length) {
-                separator = "-".repeat(lhv.toString().length + 1)
-                space = ""
-            } else separator = "-".repeat(lhv.toString().length)
-            it.write("$space-$resultTemp   $result")
-            it.newLine()
-            countSpace = if (lhv.toString().length == resultTemp.length) {
+            if (result == "0" && lhv.toString().length > 1) {
+                space = " ".repeat(lhv.toString().length - resultTemp.length - 1)
+                separator = "-".repeat(lhv.toString().length)
+                it.write("$space-$resultTemp   $result")
+                it.newLine()
                 it.write(separator)
-                separator.length - (lhv % rhv).toString().length
+                it.newLine()
+                it.write("${" ".repeat(separator.length - (lhv % rhv).toString().length)}${lhv % rhv}")
             } else {
-                it.write(" $separator")
-                separator.length - (lhv % rhv).toString().length + 1
+                space = " ".repeat(lhv.toString().length - resultTemp.length)
+                separator = "-".repeat(lhv.toString().length)
+                if (lhv.toString().length == resultTemp.length) {
+                    separator = "-".repeat(lhv.toString().length + 1)
+                    space = ""
+                } else separator = "-".repeat(lhv.toString().length)
+                it.write("$space-$resultTemp   $result")
+                it.newLine()
+                countSpace = if (lhv.toString().length == resultTemp.length) {
+                    it.write(separator)
+                    separator.length - (lhv % rhv).toString().length
+                } else {
+                    it.write(" $separator")
+                    separator.length - (lhv % rhv).toString().length + 1
+                }
+                it.newLine()
+                it.write("${" ".repeat(countSpace)}${lhv % rhv}")
             }
-            it.newLine()
-            it.write("${" ".repeat(countSpace)}${lhv % rhv}")
         } else {
             space = " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
