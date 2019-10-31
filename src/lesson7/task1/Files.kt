@@ -305,18 +305,19 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write("<body>")
         it.newLine()
         it.write("<p>")
-        var k = 0
+        var k = -1
         var newLine = ""
         val checkArr = arrayOf(0, 0, 0)
         for ((count, line) in File(inputName).readLines().withIndex()) {
-            if ((line == "" || line == "\\n" && newLine == "" || newLine == "\\n")
-                || (newLine != line && (line != "" && line != "\\n" && newLine != "" && newLine != "\\n"))
+            if (newLine != "" && newLine != "\\n") k = 0
+            if (((line == "" || line == "\\n" && newLine == "" || newLine == "\\n")
+                        || (newLine != line && (line != "" && line != "\\n" && newLine != "" && newLine != "\\n"))) && k != -1
             ) k = 0
-            if (k != 0 && count != File(inputName).readLines().size) {
+            if (k > 0 && count != File(inputName).readLines().size) {
                 it.write("</p>")
                 it.newLine()
                 it.write("<p>")
-            } else k++
+            } else if (k != -1) k++
             newLine = line
             for (i in edit.indices)
                 while (newLine.contains(edit[i]))
@@ -504,100 +505,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    var newLhv = lhv.toString()
-    val result = (lhv / rhv).toString()
-    var resultTemp = ((result[0].toInt() - 48) * rhv).toString()
-    var partLhv = lhv.toString()
-    var checker = 0
-    File(outputName).bufferedWriter().use {
-        if (result == "0" && lhv.toString().length > 1) it.write("$lhv | $rhv")
-        else it.write(" $lhv | $rhv")//блок первичных операций
-        it.newLine()
-        var countSpace = resultTemp.length + 1
-        var space = ""
-        var countSeparate = countSpace
-        var separator = "-".repeat(countSeparate)
-
-        if (result.length == 1) {
-            if (result == "0" && lhv.toString().length > 1) {
-                space = " ".repeat(lhv.toString().length - resultTemp.length - 1)
-                separator = "-".repeat(lhv.toString().length)
-                it.write("$space-$resultTemp   $result")
-                it.newLine()
-                it.write(separator)
-                it.newLine()
-                it.write("${" ".repeat(separator.length - (lhv % rhv).toString().length)}${lhv % rhv}")
-            } else {
-                space = " ".repeat(lhv.toString().length - resultTemp.length)
-                separator = "-".repeat(lhv.toString().length)
-                if (lhv.toString().length == resultTemp.length) {
-                    separator = "-".repeat(lhv.toString().length + 1)
-                    space = ""
-                } else separator = "-".repeat(lhv.toString().length)
-                it.write("$space-$resultTemp   $result")
-                it.newLine()
-                countSpace = if (lhv.toString().length == resultTemp.length) {
-                    it.write(separator)
-                    separator.length - (lhv % rhv).toString().length
-                } else {
-                    it.write(" $separator")
-                    separator.length - (lhv % rhv).toString().length + 1
-                }
-                it.newLine()
-                it.write("${" ".repeat(countSpace)}${lhv % rhv}")
-            }
-        } else {
-            space = " ".repeat(lhv.toString().length - countSpace + 4)
-            it.write("-$resultTemp$space$result")
-            it.newLine()
-            it.write(separator)
-            it.newLine()
-            partLhv = partLhv.substring(0, countSpace - 1)
-            newLhv = newLhv.replaceFirst(partLhv, "")
-            var remain = (partLhv.toInt() - resultTemp.toInt()).toString()
-            countSpace = 0
-            space = ""
-
-            for (i in 1 until result.length) {//блок последующих операций
-                if (i != 1) remain = (remain.toInt() - resultTemp.toInt()).toString()
-                checker = 1
-                countSpace += countSeparate - remain.length
-                if (remain.toInt() < rhv && i != result.length) {
-                    remain += newLhv[0]
-                    newLhv = newLhv.substring(1, newLhv.length)
-                    countSeparate = remain.length
-                }
-                space = " ".repeat(countSpace)
-                it.run {
-                    write("$space$remain")
-                    newLine()
-                }
-                resultTemp = ((result[i].toInt() - 48) * rhv).toString()
-                if (resultTemp.length == remain.length) {
-                    countSpace--
-                    space = space.substring(0, space.length - 1)
-                    countSeparate++
-                } else while (space.length + resultTemp.length + 1 < countSpace + remain.length) space += " "
-                separator = "-".repeat(countSeparate)
-                it.run {
-                    write("$space-$resultTemp")
-                    newLine()
-                }
-
-                space = " ".repeat(countSpace)
-                it.write("$space$separator")
-                it.newLine()
-
-                space = ""
-            }
-
-            if (checker == 0) countSpace = 0
-            when (checker) {
-                2 -> for (i in 2 until countSpace + countSeparate) space += " "
-                else -> for (i in 1..countSpace + countSeparate - (lhv % rhv).toString().length) space += " "
-            }
-            it.run { write("$space${lhv % rhv}") }
-        }
-    }
+    TODO()
 }
 
