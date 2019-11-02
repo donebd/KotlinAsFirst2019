@@ -511,10 +511,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var partLhv = lhv.toString()
     var checker = 0
     File(outputName).bufferedWriter().use {
-        if (result.length == 1 && lhv.toString().length >= 1 + resultTemp.length) it.write("$lhv | $rhv")
-        else it.write(" $lhv | $rhv")//блок первичных операций
-        it.newLine()
         var countSpace = resultTemp.length + 1
+        if (result.length == 1 && lhv.toString().length >= 1 + resultTemp.length) it.write("$lhv | $rhv")
+        else if (partLhv.substring(0, countSpace - 1).toInt() - resultTemp.toInt() < 0) {
+            it.write("$lhv | $rhv")
+            checker = 5
+        } else it.write(" $lhv | $rhv")//блок первичных операций
+        it.newLine()
         var space = ""
         var countSeparate = countSpace
         var separator = "-".repeat(countSeparate)
@@ -530,7 +533,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 it.write("${" ".repeat(separator.length - (lhv % rhv).toString().length)}${lhv % rhv}")
             } else {
                 space = " ".repeat(lhv.toString().length - resultTemp.length)
-                separator = "-".repeat(lhv.toString().length)
                 if (lhv.toString().length == resultTemp.length) {
                     separator = "-".repeat(lhv.toString().length + 1)
                     space = ""
@@ -548,16 +550,24 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 it.write("${" ".repeat(countSpace)}${lhv % rhv}")
             }
         } else {
-            space = " ".repeat(lhv.toString().length - countSpace + 4)
+            space = if (checker == 5) " ".repeat(lhv.toString().length - countSpace + 3)
+            else " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
             it.newLine()
             it.write(separator)
             it.newLine()
-            partLhv = partLhv.substring(0, countSpace - 1)
+            var remain = ""
+            if (partLhv.substring(0, countSpace - 1).toInt() - resultTemp.toInt() >= 0) {
+                partLhv = partLhv.substring(0, countSpace - 1)
+                remain = (partLhv.toInt() - resultTemp.toInt()).toString()
+            } else {
+                partLhv = partLhv.substring(0, countSpace)
+                remain = (partLhv.toInt() - resultTemp.toInt()).toString()
+            }
             newLhv = newLhv.replaceFirst(partLhv, "")
-            var remain = (partLhv.toInt() - resultTemp.toInt()).toString()
             countSpace = 0
             space = ""
+            checker = 0
 
             for (i in 1 until result.length) {//блок последующих операций
                 if (i != 1) remain = (remain.toInt() - resultTemp.toInt()).toString()
