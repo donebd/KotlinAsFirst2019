@@ -160,7 +160,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var result = 0
-    for (i in 0 until a.size) result += (a[i] * b[i])
+    for (i in a.indices) result += (a[i] * b[i])
     return result
 }
 
@@ -300,7 +300,7 @@ fun convertToString(n: Int, base: Int): String {
 
 fun decimal(digits: List<Int>, base: Int): Int {
     var result = 0.0
-    for (i in 0 until digits.size) {
+    for (i in digits.indices) {
         result += digits[i] * base.toDouble().pow(digits.size - i - 1.0)
     }
     return result.toInt()
@@ -318,12 +318,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-//Для решения использовал таблицу ASCII. Константа 48 (48 элемент цифра 0). Константа 87 ( Латинская a в таблице 97 элмент 'a'.toInt()-87 = 10)
+
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0.0
-    for (i in 0 until str.length) {
-        result += if (str[i].toInt() - 48 < 10) (str[i].toInt() - 48) * base.toDouble().pow(str.length - i - 1)
-        else (str[i].toInt() - 87) * base.toDouble().pow(str.length - i - 1)
+    for (i in str.indices) {
+        result += if (str[i].toInt() - '0'.toInt() < 10) (str[i].toInt() - '0'.toInt()) * base.toDouble().pow(str.length - i - 1)
+        else (str[i].toInt() - 'a'.toInt() + 10) * base.toDouble().pow(str.length - i - 1)
     }
     return result.toInt()
 }
