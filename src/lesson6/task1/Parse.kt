@@ -293,7 +293,7 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    if (Regex(pattern = """[\s+><\-\[\]]""").replace(commands, "") != "") throw IllegalArgumentException()
+    require(Regex(pattern = """[\s+><\-\[\]]""").replace(commands, "") == "")
     //проверка на лишние символы
     var limitVar = limit
     var count = 0
@@ -312,7 +312,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         } else throw IllegalArgumentException()//проверка на неправильное расположение скобок
         count++
     }
-    if (index != 0) throw IllegalArgumentException()//проверка на незакрытые скобки
+    require(index == 0)//проверка на незакрытые скобки
     val array = IntArray(cells) { 0 }//массив ячеек
     index = cells / 2//положение датчика
     count = 0
