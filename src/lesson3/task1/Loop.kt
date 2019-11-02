@@ -269,6 +269,30 @@ fun hasDifferentDigits(n: Int): Boolean {
     return false
 }
 
+//Объединение двух функций
+fun doubleDigit(n: Int, k: Int): Int {
+    var count = 0
+    if (n < 4 && k == 0) return n * n
+    if (n < 7 && k != 0) return fib(n)
+    var i = 0.0
+    var number = 0
+    var answer = 0
+    while (count < n) {
+        i++
+        number = if (k == 0) i.pow(2).toInt()
+        else fib(i.toInt())
+        while (number > 0) {
+            count++
+            number /= 10
+        }
+    }
+    answer = if (k == 0) i.pow(2).toInt()
+    else fib(i.toInt())
+    count -= n
+    for (i in 1..count) answer /= 10
+    return answer % 10
+}
+
 /**
  * Сложная
  *
@@ -279,25 +303,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var count = 0
-    if (n < 4) return n * n
-    var i = 0.0
-    var number = 0
-    var answer = 0
-    while (count < n) {
-        i++
-        number = i.pow(2).toInt()
-        while (number > 0) {
-            count++
-            number /= 10
-        }
-    }
-    answer = i.pow(2).toInt()
-    count -= n
-    for (i in 1..count) answer /= 10
-    return answer % 10
-}
+fun squareSequenceDigit(n: Int): Int = doubleDigit(n, 0)
 
 /**
  * Сложная
@@ -308,23 +314,5 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строкамиё в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var count = 0
-    if (n < 7) return fib(n)
-    var i = 0.0
-    var number = 0
-    var answer = 0
-    while (count < n) {
-        i++
-        number = fib(i.toInt())
-        while (number > 0) {
-            count++
-            number /= 10
-        }
-    }
-    answer = fib(i.toInt())
-    count -= n
-    for (i in 1..count) answer /= 10
-    return answer % 10
-}
+fun fibSequenceDigit(n: Int): Int = doubleDigit(n, 1)
 
