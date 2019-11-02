@@ -510,28 +510,31 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var resultTemp = ((result[0].toInt() - 48) * rhv).toString()
     var partLhv = lhv.toString()
     var checker = 0
+    var countSpace = resultTemp.length + 1
+    var countSeparate = countSpace
     File(outputName).bufferedWriter().use {
-        var countSpace = resultTemp.length + 1
-        if (result.length == 1 && lhv.toString().length >= 1 + resultTemp.length) it.write("$lhv | $rhv")
+        if (result.length == 1 && lhv.toString().length >= 1 + resultTemp.length) it.write("$lhv | $rhv")// первая строка
         else if (partLhv.substring(0, countSpace - 1).toInt() - resultTemp.toInt() < 0) {
             it.write("$lhv | $rhv")
             checker = 5
-        } else it.write(" $lhv | $rhv")//блок первичных операций
+        } else it.write(" $lhv | $rhv")
+
         it.newLine()
         var space = ""
-        var countSeparate = countSpace
         var separator = "-".repeat(countSeparate)
 
-        if (result.length == 1) {
-            if (lhv.toString().length >= 1 + resultTemp.length) {
+        if (result.length == 1) {//вторая строка и вывод остатка если результат деления от 0..9
+            if (lhv.toString().length >= 1 + resultTemp.length) {//минус под делимым
                 space = " ".repeat(lhv.toString().length - resultTemp.length - 1)
                 separator = "-".repeat(lhv.toString().length)
-                it.write("$space-$resultTemp   $result")
-                it.newLine()
-                it.write(separator)
-                it.newLine()
-                it.write("${" ".repeat(separator.length - (lhv % rhv).toString().length)}${lhv % rhv}")
-            } else {
+                it.run {
+                    write("$space-$resultTemp   $result")
+                    newLine()
+                    write(separator)
+                    newLine()
+                    write("${" ".repeat(separator.length - (lhv % rhv).toString().length)}${lhv % rhv}")
+                }
+            } else {// минус не под делимым
                 space = " ".repeat(lhv.toString().length - resultTemp.length)
                 if (lhv.toString().length == resultTemp.length) {
                     separator = "-".repeat(lhv.toString().length + 1)
@@ -549,7 +552,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 it.newLine()
                 it.write("${" ".repeat(countSpace)}${lhv % rhv}")
             }
-        } else {
+        } else {//вторая строка и последующие если результат деления >= 10
             space = if (checker == 5) " ".repeat(lhv.toString().length - countSpace + 3)
             else " ".repeat(lhv.toString().length - countSpace + 4)
             it.write("-$resultTemp$space$result")
@@ -569,7 +572,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             space = ""
             checker = 0
 
-            for (i in 1 until result.length) {//блок последующих операций
+            for (i in 1 until result.length) {//блок последующих операций после первой
                 if (i != 1) remain = (remain.toInt() - resultTemp.toInt()).toString()
                 checker = 1
                 countSpace += countSeparate - remain.length
@@ -594,11 +597,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     write("$space-$resultTemp")
                     newLine()
                 }
-
                 space = " ".repeat(countSpace)
                 it.write("$space$separator")
                 it.newLine()
-
                 space = ""
             }
 
@@ -609,6 +610,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             }
             it.run { write("$space${lhv % rhv}") }
         }
+
     }
 }
 
