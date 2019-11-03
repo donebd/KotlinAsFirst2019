@@ -107,9 +107,9 @@ data class Segment(val begin: Point, val end: Point) {
  */
 fun diameter(vararg points: Point): Segment {
     require(points.size >= 2)
-    var maxSegment: Segment = Segment(Point(0.0, 0.0), Point(0.0, 0.0))
+    var maxSegment = Segment(Point(0.0, 0.0), Point(0.0, 0.0))
     for (i in points)
-        for (j in points) if (i.distance(j) >= maxSegment.begin.distance(maxSegment.end)) maxSegment = Segment(i,j)
+        for (j in points) if (i.distance(j) >= maxSegment.begin.distance(maxSegment.end)) maxSegment = Segment(i, j)
     return maxSegment
 }
 
