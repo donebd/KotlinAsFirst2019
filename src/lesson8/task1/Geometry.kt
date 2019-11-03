@@ -3,10 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Точка на плоскости
@@ -79,14 +76,16 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = TODO()
+    fun distance(other: Circle): Double = if (center.distance(other.center) <= radius + other.radius) 0.0
+    else center.distance(other.center) - radius - other.radius
 
     /**
      * Тривиальная
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = TODO()
+
+    fun contains(p: Point): Boolean = (center.distance(p) <= radius)
 }
 
 /**
@@ -106,7 +105,13 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment {
+    require(points.size >= 2)
+    var maxSegment: Segment = Segment(Point(0.0, 0.0), Point(0.0, 0.0))
+    for (i in points)
+        for (j in points) if (i.distance(j) >= maxSegment.begin.distance(maxSegment.end)) maxSegment = Segment(i,j)
+    return maxSegment
+}
 
 /**
  * Простая
