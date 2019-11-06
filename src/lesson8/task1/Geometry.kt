@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import javax.print.attribute.standard.MediaSizeName.C
 import kotlin.math.*
 
 /**
@@ -171,6 +172,7 @@ fun lineBySegment(s: Segment): Line {
         s.end.x > s.begin.x && s.end.y > s.begin.y -> asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
         s.end.x > s.begin.x && s.end.y < s.begin.y -> PI - asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
         s.end.x < s.begin.x && s.end.y < s.begin.y -> asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
+        s.end.x == s.begin.x -> 0.0
         else -> PI - asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
     }
     return Line(s.begin, angle)
@@ -201,7 +203,21 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    var minDist = 10000.0
+    var x = Circle(Point(0.0, 0.0), 0.0)
+    var y = Circle(Point(0.0, 0.0), 0.0)
+    if (circles.size < 2) throw IllegalAccessException()
+    for (i in circles)
+        for (j in circles) {
+            if (i != j && minDist > i.distance(j)) {
+                x = i
+                y = j
+                minDist = i.distance(j)
+            }
+        }
+    return Pair(x, y)
+}
 
 /**
  * Сложная
@@ -229,5 +245,22 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    if (points.isEmpty()) throw IllegalAccessException()
+    if (points.size == 1) return Circle(points.first(), 0.0)
+
+    val diameter = diameter(*points)
+    var thirdPoint = Point(0.0, 0.0)
+    var circle = circleByDiameter(diameter)
+    var maxDist = 0.0
+    if (points.size == 2) return circleByDiameter(diameter)
+    for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
+        maxDist = i.distance(circle.center)
+        thirdPoint = i
+    }//проверяем есть ли точки которые не входят в круг
+    if (thirdPoint.distance(Point(0.0, 0.0)) != 0.0) {
+        circle = circleByThreePoints(diameter.begin, diameter.end, thirdPoint)
+    }//если да то строим круг по двум самым далеким и точке самой далекой от круга двух далеких точек
+    return circle
+}
 
