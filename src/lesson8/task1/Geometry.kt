@@ -121,8 +121,8 @@ fun diameter(vararg points: Point): Segment {
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
 fun circleByDiameter(diameter: Segment): Circle = Circle(
-    Point(abs(diameter.end.x - diameter.begin.x) / 2, abs(diameter.end.y - diameter.begin.y) / 2),
-    diameter.end.distance((diameter.begin)) / 2
+    Point((diameter.end.x + diameter.begin.x) / 2.0, (diameter.end.y + diameter.begin.y) / 2.0),
+    diameter.end.distance((diameter.begin)) / 2.0
 )
 
 /**
@@ -172,7 +172,6 @@ fun lineBySegment(s: Segment): Line {
         s.end.x > s.begin.x && s.end.y > s.begin.y -> asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
         s.end.x > s.begin.x && s.end.y < s.begin.y -> PI - asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
         s.end.x < s.begin.x && s.end.y < s.begin.y -> asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
-        s.end.x == s.begin.x -> 0.0
         else -> PI - asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
     }
     return Line(s.begin, angle)
@@ -249,11 +248,13 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw IllegalAccessException()
     if (points.size == 1) return Circle(points.first(), 0.0)
 
-    val diameter = diameter(*points)
+    val diameter = diameter(*points)//отрезок между самыми далекими точками
+    if (points.size == 2) return circleByDiameter(diameter)
+
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
     var maxDist = 0.0
-    if (points.size == 2) return circleByDiameter(diameter)
+
     for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
         maxDist = i.distance(circle.center)
         thirdPoint = i
