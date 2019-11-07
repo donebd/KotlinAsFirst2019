@@ -169,8 +169,8 @@ class Line private constructor(val b: Double, val angle: Double) {
  */
 fun lineBySegment(s: Segment): Line {
     val angle = when {
-        s.end.x > s.begin.x && s.end.y > s.begin.y -> asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
-        s.end.x > s.begin.x && s.end.y < s.begin.y -> PI - asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
+        s.end.x > s.begin.x -> if (s.end.y > s.begin.y) asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
+        else PI - asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
         s.end.x < s.begin.x && s.end.y < s.begin.y -> asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
         else -> PI - asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
     }
@@ -247,14 +247,11 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw IllegalAccessException()
     if (points.size == 1) return Circle(points.first(), 0.0)
-
     val diameter = diameter(*points)//отрезок между самыми далекими точками
     if (points.size == 2) return circleByDiameter(diameter)
-
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
     var maxDist = 0.0
-
     for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
         maxDist = i.distance(circle.center)
         thirdPoint = i
