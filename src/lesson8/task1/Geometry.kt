@@ -223,11 +223,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
-    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(
-        a,
-        b,
-        c
-    ).area())//Формула радиуса описанной окружности треугольника
+    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())//Формула радиуса описанной окружности треугольника
     return Circle(center, radius)
 }
 
@@ -250,7 +246,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
     var maxDist = 0.0
-    for (i in points) if (i.distance(circle.center) > circle.radius - 0.00001 && i.distance(circle.center) > maxDist) {
+    for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
         maxDist = i.distance(circle.center)
         thirdPoint = i
     }//проверяем есть ли точки которые не входят в круг
