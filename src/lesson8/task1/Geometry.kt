@@ -174,7 +174,7 @@ fun lineBySegment(s: Segment): Line {
         s.end.x < s.begin.x && s.end.y < s.begin.y -> asin((s.begin.y - s.end.y) / s.begin.distance(s.end))
         else -> PI - asin((s.end.y - s.begin.y) / s.begin.distance(s.end))
     }
-    return Line(s.begin, angle)
+    return Line(s.begin, angle % PI)
 }
 
 /**
