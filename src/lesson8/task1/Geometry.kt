@@ -223,7 +223,11 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
-    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())//Формула радиуса описанной окружности треугольника
+    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(
+        a,
+        b,
+        c
+    ).area())//Формула радиуса описанной окружности треугольника
     return Circle(center, radius)
 }
 
@@ -242,6 +246,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw IllegalAccessException()
     if (points.size == 1) return Circle(points.first(), 0.0)
     val diameter = diameter(*points)//отрезок между самыми далекими точками
+    var k = 0
     if (points.size == 2) return circleByDiameter(diameter)
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
@@ -249,8 +254,9 @@ fun minContainingCircle(vararg points: Point): Circle {
     for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
         maxDist = i.distance(circle.center)
         thirdPoint = i
+        k = 1
     }//проверяем есть ли точки которые не входят в круг
-    if (thirdPoint.distance(Point(0.0, 0.0)) != 0.0) {
+    if (k == 1) {
         circle = circleByThreePoints(diameter.begin, diameter.end, thirdPoint)
     }//если да то строим круг по двум самым далеким и точке самой далекой от круга двух далеких точек
     return circle
