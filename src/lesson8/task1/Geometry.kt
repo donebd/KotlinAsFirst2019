@@ -246,19 +246,17 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw IllegalAccessException()
     if (points.size == 1) return Circle(points.first(), 0.0)
     val diameter = diameter(*points)//отрезок между самыми далекими точками
-    var k = 0
     if (points.size == 2) return circleByDiameter(diameter)
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
     var maxDist = 0.0
-    for (i in points) if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
-        maxDist = i.distance(circle.center)
-        thirdPoint = i
-        k = 1
-    }//проверяем есть ли точки которые не входят в круг
-    if (k == 1) {
+    for (i in points.distinct().filter { it != diameter.begin && it != diameter.end })
+        if (i.distance(circle.center) > circle.radius && i.distance(circle.center) > maxDist) {
+            maxDist = i.distance(circle.center)
+            thirdPoint = i
+        }//проверяем есть ли точки которые не входят в круг
+    if (maxDist != 0.0) {
         circle = circleByThreePoints(diameter.begin, diameter.end, thirdPoint)
     }//если да то строим круг по двум самым далеким и точке самой далекой от круга двух далеких точек
     return circle
 }
-
