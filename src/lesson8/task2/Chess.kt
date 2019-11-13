@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson8.task2
+import kotlin.math.abs
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -33,7 +34,10 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square =
+    if (Square(notation[0] - 'a' + 1, notation[1] - '0').inside() && notation.length == 2)
+        Square(notation[0] - 'a' + 1, notation[1] - '0')
+    else throw IllegalArgumentException("Такой ячейки не существет")
 
 /**
  * Простая
@@ -58,7 +62,14 @@ fun square(notation: String): Square = TODO()
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+
+fun rookMoveNumber(start: Square, end: Square): Int {
+    if (start == end) return 0
+    if (start.inside() && end.inside())
+        return if (start.column == end.column || start.row == end.row) 1
+        else 2
+    throw IllegalArgumentException("Такой ячейки не существет")
+}
 
 /**
  * Средняя
@@ -74,7 +85,11 @@ fun rookMoveNumber(start: Square, end: Square): Int = TODO()
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNumber(start, end)) {
+    0 -> listOf(start)
+    1 -> listOf(start, end)
+    else -> listOf(start, Square(end.column, start.row), end)
+}
 
 /**
  * Простая
@@ -99,7 +114,15 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int {
+    if (start == end) return 0
+    if (start.inside() && end.inside())
+        return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
+            if (abs(end.row - start.row) == abs(end.column - start.column)) 1
+            else 2
+        else -1
+    throw IllegalArgumentException("Такой ячейки не существет")
+}
 
 /**
  * Сложная
@@ -119,7 +142,19 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    if (bishopMoveNumber(start, end) == 2) {
+        for (i in 1..8)
+            for (j in 1..8)
+                if (bishopMoveNumber(Square(i, j), end) == 1 && bishopMoveNumber(Square(i, j), start) == 1)
+                    return listOf(start, Square(i, j), end)
+    }
+    return when (bishopMoveNumber(start, end)) {
+        -1 -> listOf()
+        0 -> listOf(start)
+        else -> listOf(start, end)
+    }
+}
 
 /**
  * Средняя
