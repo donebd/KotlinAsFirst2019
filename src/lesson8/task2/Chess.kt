@@ -182,6 +182,7 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  */
 fun kingMoveNumber(start: Square, end: Square): Int =
     when {
+        !start.inside() || !end.inside() -> throw IllegalArgumentException()
         start == end -> 0
         end.column in start.column - 1..start.column + 1 && end.row in start.row - 1..start.row + 1 -> 1
         start.column > end.column -> when {
