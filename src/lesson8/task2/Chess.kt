@@ -2,6 +2,7 @@
 
 package lesson8.task2
 
+import lesson3.task1.collatzSteps
 import kotlin.math.abs
 
 /**
@@ -69,7 +70,7 @@ fun square(notation: String): Square =
  */
 
 fun rookMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside()) {"Такой ячейки не существует"}
+    require(start.inside() && end.inside()) { "Такой ячейки не существует" }
     if (start == end) return 0
     return if (start.column == end.column || start.row == end.row) 1
     else 2
@@ -119,7 +120,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNum
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside()) {"Такой ячейки не существует"}
+    require(start.inside() && end.inside()) { "Такой ячейки не существует" }
     if (start == end) return 0
     return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
         if (abs(end.row - start.row) == abs(end.column - start.column)) 1
@@ -179,7 +180,27 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun kingMoveNumber(start: Square, end: Square): Int =
+    when {
+        start == end -> 0
+        end.column in start.column - 1..start.column + 1 && end.row in start.row - 1..start.row + 1 -> 1
+        start.column > end.column -> when {
+            start.row > end.row -> 1 + kingMoveNumber(Square(start.column - 1, start.row - 1), end)
+            start.row < end.row -> 1 + kingMoveNumber(Square(start.column - 1, start.row + 1), end)
+            else -> 1 + kingMoveNumber(Square(start.column - 1, start.row), end)
+        }
+        start.column < end.column -> when {
+            start.row > end.row -> 1 + kingMoveNumber(Square(start.column + 1, start.row - 1), end)
+            start.row < end.row -> 1 + kingMoveNumber(Square(start.column + 1, start.row + 1), end)
+            else -> 1 + kingMoveNumber(Square(start.column + 1, start.row), end)
+        }
+        else -> when {
+            start.row > end.row -> 1 + kingMoveNumber(Square(start.column, start.row - 1), end)
+            start.row < end.row -> 1 + kingMoveNumber(Square(start.column, start.row + 1), end)
+            else -> 1 + kingMoveNumber(Square(start.column, start.row), end)
+        }
+    }
+
 
 /**
  * Сложная
@@ -195,7 +216,28 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    val answerList = mutableListOf(start)
+    if (kingMoveNumber(start, end) >= 1)
+        return when {
+            start.column > end.column -> when {
+                start.row > end.row -> answerList + kingTrajectory(Square(start.column - 1, start.row - 1), end)
+                start.row < end.row -> answerList + kingTrajectory(Square(start.column - 1, start.row + 1), end)
+                else -> answerList + kingTrajectory(Square(start.column - 1, start.row), end)
+            }
+            start.column < end.column -> when {
+                start.row > end.row -> answerList + kingTrajectory(Square(start.column + 1, start.row - 1), end)
+                start.row < end.row -> answerList + kingTrajectory(Square(start.column + 1, start.row + 1), end)
+                else -> answerList + kingTrajectory(Square(start.column + 1, start.row), end)
+            }
+            else -> when {
+                start.row > end.row -> answerList + kingTrajectory(Square(start.column, start.row - 1), end)
+                start.row < end.row -> answerList + kingTrajectory(Square(start.column, start.row + 1), end)
+                else -> answerList + kingTrajectory(Square(start.column, start.row), end)
+            }
+        }
+    return listOf(end)
+}
 
 /**
  * Сложная
