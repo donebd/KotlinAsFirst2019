@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson8.task2
+
 import kotlin.math.abs
 
 /**
@@ -27,6 +28,10 @@ data class Square(val column: Int, val row: Int) {
     else ""
 }
 
+fun main() {
+    print(square(""))
+}
+
 /**
  * Простая
  *
@@ -35,7 +40,7 @@ data class Square(val column: Int, val row: Int) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square =
-    if (Square(notation[0] - 'a' + 1, notation[1] - '0').inside() && notation.length == 2)
+    if (notation.length == 2 && Square(notation[0] - 'a' + 1, notation[1] - '0').inside())
         Square(notation[0] - 'a' + 1, notation[1] - '0')
     else throw IllegalArgumentException("Такой ячейки не существет")
 
@@ -64,11 +69,10 @@ fun square(notation: String): Square =
  */
 
 fun rookMoveNumber(start: Square, end: Square): Int {
+    require(!(start.inside() && end.inside())) { "Такой ячейки не существет" }
     if (start == end) return 0
-    if (start.inside() && end.inside())
-        return if (start.column == end.column || start.row == end.row) 1
-        else 2
-    throw IllegalArgumentException("Такой ячейки не существет")
+    return if (start.column == end.column || start.row == end.row) 1
+    else 2
 }
 
 /**
@@ -115,13 +119,12 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNum
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
 fun bishopMoveNumber(start: Square, end: Square): Int {
+    require(!(start.inside() && end.inside())) { "Такой ячейки не существет" }
     if (start == end) return 0
-    if (start.inside() && end.inside())
-        return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
-            if (abs(end.row - start.row) == abs(end.column - start.column)) 1
-            else 2
-        else -1
-    throw IllegalArgumentException("Такой ячейки не существет")
+    return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
+        if (abs(end.row - start.row) == abs(end.column - start.column)) 1
+        else 2
+    else -1
 }
 
 /**
