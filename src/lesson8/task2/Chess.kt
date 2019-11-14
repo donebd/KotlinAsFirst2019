@@ -42,7 +42,7 @@ fun main() {
 fun square(notation: String): Square =
     if (notation.length == 2 && Square(notation[0] - 'a' + 1, notation[1] - '0').inside())
         Square(notation[0] - 'a' + 1, notation[1] - '0')
-    else throw IllegalArgumentException()
+    else throw IllegalArgumentException("Такой ячейки не существует")
 
 /**
  * Простая
@@ -69,7 +69,7 @@ fun square(notation: String): Square =
  */
 
 fun rookMoveNumber(start: Square, end: Square): Int {
-    require(!(start.inside() && end.inside()))
+    require(start.inside() && end.inside()) {"Такой ячейки не существует"}
     if (start == end) return 0
     return if (start.column == end.column || start.row == end.row) 1
     else 2
@@ -119,7 +119,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNum
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    require(!(start.inside() && end.inside()))
+    require(start.inside() && end.inside()) {"Такой ячейки не существует"}
     if (start == end) return 0
     return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
         if (abs(end.row - start.row) == abs(end.column - start.column)) 1
