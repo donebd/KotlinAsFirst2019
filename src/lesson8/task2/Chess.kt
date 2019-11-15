@@ -4,6 +4,7 @@ package lesson8.task2
 
 import lesson3.task1.collatzSteps
 import kotlin.math.abs
+import lesson8.task3.Graph
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -263,7 +264,26 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun knightMoveNumber(start: Square, end: Square): Int {
+    val chess = Graph()
+    for (i in 1..8)
+        for (j in 1..8)
+            chess.addVertex("$i$j")
+    for (i in 1..8)
+        for (j in 1..8) {
+            if (Square(i - 2, j - 1).inside()) chess.connect("$i$j", "${i - 2}${j - 1}")
+            if (Square(i - 2, j + 1).inside()) chess.connect("$i$j", "${i - 2}${j + 1}")
+            if (Square(i - 1, j - 2).inside()) chess.connect("$i$j", "${i - 1}${j - 2}")
+            if (Square(i - 1, j + 2).inside()) chess.connect("$i$j", "${i - 1}${j + 2}")
+            if (Square(i + 1, j + 2).inside()) chess.connect("$i$j", "${i + 1}${j + 2}")
+            if (Square(i + 1, j - 2).inside()) chess.connect("$i$j", "${i + 1}${j - 2}")
+            if (Square(i + 2, j + 1).inside()) chess.connect("$i$j", "${i + 2}${j + 1}")
+            if (Square(i + 2, j - 1).inside()) chess.connect("$i$j", "${i + 2}${j - 1}")
+        }
+    val i = start.column.toString() + start.row.toString()
+    val j = end.column.toString() + end.row.toString()
+    return chess.bfs(i, j)
+}
 
 /**
  * Очень сложная
