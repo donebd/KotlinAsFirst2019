@@ -5,6 +5,7 @@ package lesson8.task2
 import lesson3.task1.collatzSteps
 import kotlin.math.abs
 import lesson8.task3.Graph
+import sun.security.provider.certpath.Vertex
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -30,8 +31,11 @@ data class Square(val column: Int, val row: Int) {
     else ""
 }
 
-fun main() {
-    print(square(""))
+fun squareByVertex(notation: Graph.Vertex): Square {
+    val temp = Regex(pattern = """[^\d]""").replace(notation.toString(), "")
+    return if (temp.length == 2 && Square(temp[0] - '0', temp[1] - '0').inside())
+        Square(temp[0] - '0', temp[1] - '0')
+    else throw IllegalArgumentException("Такой ячейки не существует")
 }
 
 /**
@@ -282,7 +286,7 @@ fun knightMoveNumber(start: Square, end: Square): Int {
         }
     val i = start.column.toString() + start.row.toString()
     val j = end.column.toString() + end.row.toString()
-    return chess.bfs(i, j)
+    return chess.bfs(i, j).first
 }
 
 /**
@@ -305,4 +309,30 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    val chess = Graph()
+    for (i in 1..8)
+        for (j in 1..8)
+            chess.addVertex("$i$j")
+    for (i in 1..8)
+        for (j in 1..8) {
+            if (Square(i - 2, j - 1).inside()) chess.connect("$i$j", "${i - 2}${j - 1}")
+            if (Square(i - 2, j + 1).inside()) chess.connect("$i$j", "${i - 2}${j + 1}")
+            if (Square(i - 1, j - 2).inside()) chess.connect("$i$j", "${i - 1}${j - 2}")
+            if (Square(i - 1, j + 2).inside()) chess.connect("$i$j", "${i - 1}${j + 2}")
+            if (Square(i + 1, j + 2).inside()) chess.connect("$i$j", "${i + 1}${j + 2}")
+            if (Square(i + 1, j - 2).inside()) chess.connect("$i$j", "${i + 1}${j - 2}")
+            if (Square(i + 2, j + 1).inside()) chess.connect("$i$j", "${i + 2}${j + 1}")
+            if (Square(i + 2, j - 1).inside()) chess.connect("$i$j", "${i + 2}${j - 1}")
+        }
+    val i = start.column.toString() + start.row.toString()
+    var j = end.column.toString() + end.row.toString()
+    val answer = mutableListOf(end)
+    while (chess.bfs(i, j).first > 0) {
+        val tempVertex = chess.bfs(i, j).second
+        val tempSquare = squareByVertex(tempVertex)
+        answer.add(tempSquare)
+        j = tempSquare.column.toString() + tempSquare.row.toString()
+    }
+    return answer.reversed()
+}

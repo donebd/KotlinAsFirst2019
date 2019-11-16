@@ -3,7 +3,7 @@ package lesson8.task3
 import java.util.*
 
 class Graph {
-    private data class Vertex(val name: String) {
+    data class Vertex(val name: String) {
         val neighbors = mutableSetOf<Vertex>()
     }
 
@@ -32,21 +32,21 @@ class Graph {
      */
     fun bfs(start: String, finish: String) = bfs(this[start], this[finish])
 
-    private fun bfs(start: Vertex, finish: Vertex): Int {
-        val queue = ArrayDeque<Vertex>()
-        queue.add(start)
+    private fun bfs(start: Vertex, finish: Vertex): Pair<Int, Vertex> {
+        val queue = ArrayDeque<Pair<Vertex, Vertex>>()
+        queue.add(Pair(start, start))
         val visited = mutableMapOf(start to 0)
         while (queue.isNotEmpty()) {
             val next = queue.poll()
-            val distance = visited[next]!!
-            if (next == finish) return distance
-            for (neighbor in next.neighbors) {
+            val distance = visited[next.first]!!
+            if (next.first == finish) return Pair(distance, next.second)
+            for (neighbor in next.first.neighbors) {
                 if (neighbor in visited) continue
                 visited[neighbor] = distance + 1
-                queue.add(neighbor)
+                queue.add(Pair(neighbor, next.first))
             }
         }
-        return -1
+        return Pair(-1, Vertex(""))
     }
 
     /**
