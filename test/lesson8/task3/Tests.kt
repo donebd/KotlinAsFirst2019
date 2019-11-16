@@ -8,6 +8,34 @@ class Tests {
 
     @Test
     @Tag("Example")
+    fun bfs() {
+        val graph = Graph()
+        graph.addVertex("A")
+        graph.addVertex("B")
+        graph.addVertex("C")
+        graph.addVertex("D")
+        graph.addVertex("E")
+        graph.addVertex("F")
+        graph.addVertex("G")
+        graph.addVertex("H")
+        graph.connect("A", "B")
+        graph.connect("B", "C")
+        graph.connect("B", "D")
+        graph.connect("C", "E")
+        graph.connect("D", "F")
+        graph.connect("C", "F")
+        graph.connect("G", "H")
+        assertEquals(0, graph.bfs("A", "A").first)
+        assertEquals(3, graph.bfs("A", "F").first)
+        assertEquals(2, graph.bfs("E", "F").first)
+        assertEquals(3, graph.bfs("E", "D").first)
+        assertEquals(1, graph.bfs("H", "G").first)
+        assertEquals(-1, graph.bfs("H", "A").first)
+    }
+
+
+    @Test
+    @Tag("Example")
     fun dfs() {
         val graph = Graph()
         graph.addVertex("A")
