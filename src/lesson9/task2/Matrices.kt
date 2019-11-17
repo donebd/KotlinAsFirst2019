@@ -66,7 +66,11 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     answer[i, j] = 1
     for (a in 2..capacity(answer)) {
         when {
-            inside(answer, i, j + 1) && answer[i, j + 1] == 0 && (!inside(answer,i - 1, j) || answer[i - 1, j] != 0  ) -> {
+            inside(answer, i, j + 1) && answer[i, j + 1] == 0 && (!inside(
+                answer,
+                i - 1,
+                j
+            ) || answer[i - 1, j] != 0) -> {
                 j++
                 answer[i, j] = a
             }
@@ -101,7 +105,23 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val answer = createMatrix(height, width, 0)
+    var a = 1
+    while (a <= width && a <= height) {
+        for (i in 0 until height) {
+            if (answer[i, a - 1] == 0) answer[i, a - 1] = a
+            if (answer[i, width - a] == 0) answer[i, width - a] = a
+        }
+        for (i in 0 until width) {
+            if (answer[a - 1, i] == 0) answer[a - 1, i] = a
+            if (answer[height - a, i] == 0) answer[height - a, i] = a
+
+        }
+        a++
+    }
+    return answer
+}
 
 /**
  * Сложная
