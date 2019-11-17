@@ -86,3 +86,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, value: E)
 
 }
 
+fun capacity(matrix: Matrix<*>): Int = matrix.height * matrix.width
+
+fun inside(matrix: Matrix<*>, height: Int, width: Int): Boolean = height < matrix.height && height > -1 && width < matrix.width && width > -1
