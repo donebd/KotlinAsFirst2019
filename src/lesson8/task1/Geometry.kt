@@ -230,33 +230,6 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     return Circle(center, radius)
 }
 
-fun main() {
-    print(
-        circleByThreePoints(
-            Point(-632.0, -632.0),
-            Point(0.0, -5e-324),
-            Point(-632.0, 5e-324)
-        )
-    )
-    print("\n")
-    print(
-        circleByThreePoints(
-            Point(0.04810709931891077, -632.0),
-            Point(-632.0, -632.0),
-            Point(0.5630549056522162, 0.4845792146135566)
-        )
-    )
-    print("\n")
-    print(
-        circleByThreePoints(
-            Point(-5e-324, 0.7422644114815358),
-            Point(5e-324, -632.0),
-            Point(-632.0, -632.0)
-        )
-    )
-    print("\n")
-}
-
 /**
  * Очень сложная
  *
