@@ -205,17 +205,17 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 
 
 fun factorize(n: Int): List<Int> {
-    var n = n
+    var n1 = n
     val a = mutableListOf<Int>()
-    while (n != 1) {
-        for (i in 2..n) if (n % i == 0) {
+    while (n1 != 1) {
+        for (i in 2..n1) if (n1 % i == 0) {
             a += i
-            n /= i
+            n1 /= i
             break
         }
-        if (maxDivisor(n) == 0 && n != 1) {
-            a.add(n)
-            n /= n
+        if (maxDivisor(n1) == 0 && n1 != 1) {
+            a.add(n1)
+            n1 /= n1
         }
     }
     return a
@@ -229,22 +229,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    var n = n
-    val a = mutableListOf<Int>()
-    while (n != 1) {
-        for (i in 2..n) if (n % i == 0) {
-            a.add(i)
-            n /= i
-            break
-        }
-        if (maxDivisor(n) == 0 && n != 1) {
-            a.add(n)
-            n /= n
-        }
-    }
-    return a.joinToString(separator = "*")
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 
 /**
@@ -256,12 +241,12 @@ fun factorizeToString(n: Int): String {
  */
 fun convert(n: Int, base: Int): List<Int> {
     val a = mutableListOf<Int>()
-    var n = n
-    while (n >= base) {
-        a.add(n % base)
-        n /= base
+    var n1 = n
+    while (n1 >= base) {
+        a.add(n1 % base)
+        n1 /= base
     }
-    a.add(n)
+    a.add(n1)
     return a.reversed()
 }
 
@@ -278,14 +263,14 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     var a = ""
-    var n = n
-    while (n >= base) {
-        if (n % base > 9) a += (n % base + 87).toChar()
-        else a += n % base
-        n /= base
+    var n1 = n
+    while (n1 >= base) {
+        if (n1 % base > 9) a += (n1 % base + 87).toChar()
+        else a += n1 % base
+        n1 /= base
     }
-    if (n > 9) a += (n + 87).toChar() else
-        a += n
+    if (n1 > 9) a += (n1 + 87).toChar() else
+        a += n1
     return a.reversed()
 }
 
@@ -339,56 +324,56 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var result = ""
-    var n = n
-    for (i in 1..n / 1000) {
+    var n1 = n
+    for (i in 1..n1 / 1000) {
         result += 'M'
-        n %= 1000
+        n1 %= 1000
     }
-    for (i in 1..n / 900) {
+    for (i in 1..n1 / 900) {
         result += "CM"
-        n %= 900
+        n1 %= 900
     }
-    for (i in 1..n / 500) {
+    for (i in 1..n1 / 500) {
         result += "D"
-        n %= 500
+        n1 %= 500
     }
-    for (i in 1..n / 400) {
+    for (i in 1..n1 / 400) {
         result += "CD"
-        n %= 400
+        n1 %= 400
     }
-    for (i in 1..n / 100) {
+    for (i in 1..n1 / 100) {
         result += "C"
-        n %= 100
+        n1 %= 100
     }
-    for (i in 1..n / 90) {
+    for (i in 1..n1 / 90) {
         result += "XC"
-        n %= 90
+        n1 %= 90
     }
-    for (i in 1..n / 50) {
+    for (i in 1..n1 / 50) {
         result += "L"
-        n %= 50
+        n1 %= 50
     }
-    for (i in 1..n / 40) {
+    for (i in 1..n1 / 40) {
         result += "XL"
-        n %= 40
+        n1 %= 40
     }
-    for (i in 1..n / 10) {
+    for (i in 1..n1 / 10) {
         result += "X"
-        n %= 10
+        n1 %= 10
     }
-    for (i in 1..n / 9) {
+    for (i in 1..n1 / 9) {
         result += "IX"
-        n %= 9
+        n1 %= 9
     }
-    for (i in 1..n / 5) {
+    for (i in 1..n1 / 5) {
         result += "V"
-        n %= 5
+        n1 %= 5
     }
-    for (i in 1..n / 4) {
+    for (i in 1..n1 / 4) {
         result += "IV"
-        n %= 4
+        n1 %= 4
     }
-    for (i in 1..n) result += "I"
+    for (i in 1..n1) result += "I"
     return result
 }
 
@@ -400,12 +385,11 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var n = n
-    val n1 = n
+    var n2 = n
     var str = ""
     for (i in 0..1) { //цикл для того чтобы первый раз пройтись по тысячам а второй по сотням десяткам ...
-        if (n / (100000 - (99900 * i)) in 1..9) {
-            str += when (n / (100000 - (99900 * i))) {
+        if (n2 / (100000 - (99900 * i)) in 1..9) {
+            str += when (n2 / (100000 - (99900 * i))) {
                 9 -> "девятьсот "
                 8 -> "восемьсот "
                 7 -> "семьсот "
@@ -416,10 +400,10 @@ fun russian(n: Int): String {
                 2 -> "двести "
                 else -> "сто "
             }
-            n %= 100000 - (99900 * i)
+            n2 %= 100000 - (99900 * i)
         }
-        if (n / (10000 - (9990 * i)) in 1..9) {
-            when (n / (10000 - (9990 * i))) {
+        if (n2 / (10000 - (9990 * i)) in 1..9) {
+            when (n2 / (10000 - (9990 * i))) {
                 9 -> str += "девяносто "
                 8 -> str += "восемьдесят "
                 7 -> str += "семьдесят "
@@ -429,7 +413,7 @@ fun russian(n: Int): String {
                 3 -> str += "тридцать "
                 2 -> str += "двадцать "
                 else -> {
-                    str += when (n / (1000 - (999 * i))) {
+                    str += when (n2 / (1000 - (999 * i))) {
                         10 -> "десять "
                         11 -> "одиннадцать "
                         12 -> "двенадцать "
@@ -441,14 +425,14 @@ fun russian(n: Int): String {
                         18 -> "восемнадцать "
                         else -> "девятнадцать "
                     }
-                    n %= 1000
-                    if (i == 1) n = 0
+                    n2 %= 1000
+                    if (i == 1) n2 = 0
                 }
             }
-            n %= 10000 - (9990 * i)
+            n2 %= 10000 - (9990 * i)
         }
-        if (n / 1000 in 0..9 && i == 0 && n1 > 1000) {
-            str += when (n / 1000) {
+        if (n2 / 1000 in 0..9 && i == 0 && n > 1000) {
+            str += when (n2 / 1000) {
                 0 -> "тысяч "
                 1 -> "одна тысяча "
                 2 -> "две тысячи "
@@ -460,10 +444,10 @@ fun russian(n: Int): String {
                 8 -> "восемь тысяч "
                 else -> "девять тысяч "
             }
-            n %= 1000
+            n2 %= 1000
         }
-        if (i == 1 && n in 1..9) {
-            str += when (n) {
+        if (i == 1 && n2 in 1..9) {
+            str += when (n2) {
                 1 -> "один"
                 2 -> "два"
                 3 -> "три"
