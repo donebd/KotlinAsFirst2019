@@ -231,18 +231,9 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     return Circle(center, radius)
 }
 
-fun main() {
-    print(
-        circleByThreePoints(
-            Point(0.04810709931891077, -632.0),
-            Point(-632.0, -632.0),
-            Point(0.5630549056522162, 0.4845792146135566)
-        )
-    )
-}
-
 /**
  * Очень сложная
+ *
  *
  * Дано множество точек на плоскости. Найти круг минимального радиуса,
  * содержащий все эти точки. Если множество пустое, бросить IllegalArgumentException.
