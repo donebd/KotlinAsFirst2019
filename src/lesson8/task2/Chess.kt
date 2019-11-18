@@ -2,10 +2,9 @@
 
 package lesson8.task2
 
-import lesson3.task1.collatzSteps
 import kotlin.math.abs
 import lesson8.task3.Graph
-import sun.security.provider.certpath.Vertex
+
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
