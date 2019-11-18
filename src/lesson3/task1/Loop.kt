@@ -150,13 +150,13 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var m = m
-    var n = n
-    while (m != 0 && n != 0) {
-        if (m > n) m %= n
-        else n %= m
+    var m1 = m
+    var n1 = n
+    while (m1 != 0 && n1 != 0) {
+        if (m1 > n1) m1 %= n1
+        else n1 %= m1
     }
-    return (m + n == 1)
+    return (m1 + n1 == 1)
 }
 
 /**
@@ -186,10 +186,10 @@ fun squareBetweenExists(m: Int, n: Int): Boolean =
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    var x = x
+    var x1 = x
     var count = 0
-    while (x > 1) {
-        if (x % 2 == 0) x /= 2 else x = x * 3 + 1
+    while (x1 > 1) {
+        if (x1 % 2 == 0) x1 /= 2 else x1 = x1 * 3 + 1
         count++
     }
     return count
@@ -204,7 +204,17 @@ fun collatzSteps(x: Int): Int {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var f = 0.0
+    var eps1 = x % (2 * PI)
+    var count = 3
+    while (abs(eps1) >= eps) {
+        f += eps1
+        eps1 = -eps1 * (x % (2 * PI)).pow(2) / (count * (count - 1))
+        count += 2
+    }
+    return f
+}
 
 /**
  * Средняя
@@ -215,7 +225,17 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var f = 0.0
+    var eps1 = 1.0
+    var count = 2
+    while (abs(eps1) >= eps) {
+        f += eps1
+        eps1 = -eps1 * (x % (PI * 2)).pow(2) / (count * (count - 1))
+        count += 2
+    }
+    return f
+}
 
 /**
  * Средняя
@@ -225,11 +245,11 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var n = n
+    var n2 = n
     var n1: Long = 0
-    while (n > 0) {
-        n1 = (n1 + (n % 10)) * 10
-        n /= 10
+    while (n2 > 0) {
+        n1 = (n1 + (n2 % 10)) * 10
+        n2 /= 10
     }
     n1 /= 10
     return n1.toInt()
@@ -255,15 +275,15 @@ fun isPalindrome(n: Int): Boolean = (n == revert(n))
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var n = n
-    var variable = n % 10
-    if (n < 10) return false
-    while (n > 9) {
-        if ((n / 10) % 10 != variable) {
+    var n1 = n
+    var variable = n1 % 10
+    if (n1 < 10) return false
+    while (n1 > 9) {
+        if ((n1 / 10) % 10 != variable) {
             return true
             break
         }
-        n /= 10
+        n1 /= 10
         variable %= 10
     }
     return false
@@ -275,21 +295,19 @@ fun doubleDigit(n: Int, k: Int): Int {
     if (n < 4 && k == 0) return n * n
     if (n < 7 && k != 0) return fib(n)
     var i = 0.0
-    var number = 0
-    var answer = 0
     while (count < n) {
         i++
-        number = if (k == 0) i.pow(2).toInt()
+        var number = if (k == 0) i.pow(2).toInt()
         else fib(i.toInt())
         while (number > 0) {
             count++
             number /= 10
         }
     }
-    answer = if (k == 0) i.pow(2).toInt()
+    var answer = if (k == 0) i.pow(2).toInt()
     else fib(i.toInt())
     count -= n
-    for (i in 1..count) answer /= 10
+    for (j in 1..count) answer /= 10
     return answer % 10
 }
 
