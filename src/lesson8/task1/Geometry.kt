@@ -147,9 +147,8 @@ class Line private constructor(val b: Double, val angle: Double) {
      */
     fun crossPoint(other: Line): Point {
         val x1 = (other.b / cos(other.angle) - b / cos(angle)) / (tan(angle) - tan(other.angle))
-        var y1 = (x1 * sin(angle) + b) / cos(angle)
-        if (x1 != (y1 * cos(angle) - b) / sin(angle) || x1 != (y1 * cos(other.angle) - other.b) / sin(other.angle))
-            y1 = (x1 * sin(other.angle) + other.b) / cos(other.angle)
+        val y1 = if (x1 + other.b > 1e-5) (x1 * sin(other.angle) + other.b) / cos(other.angle)
+        else (x1 * sin(angle) + b) / cos(angle)
         return Point(x1, y1)
     }
 
@@ -231,9 +230,35 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     return Circle(center, radius)
 }
 
+fun main() {
+    print(
+        circleByThreePoints(
+            Point(-632.0, -632.0),
+            Point(0.0, -5e-324),
+            Point(-632.0, 5e-324)
+        )
+    )
+    print("\n")
+    print(
+        circleByThreePoints(
+            Point(0.04810709931891077, -632.0),
+            Point(-632.0, -632.0),
+            Point(0.5630549056522162, 0.4845792146135566)
+        )
+    )
+    print("\n")
+    print(
+        circleByThreePoints(
+            Point(-5e-324, 0.7422644114815358),
+            Point(5e-324, -632.0),
+            Point(-632.0, -632.0)
+        )
+    )
+    print("\n")
+}
+
 /**
  * Очень сложная
- *
  *
  * Дано множество точек на плоскости. Найти круг минимального радиуса,
  * содержащий все эти точки. Если множество пустое, бросить IllegalArgumentException.
