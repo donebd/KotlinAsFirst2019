@@ -146,8 +146,7 @@ class Line private constructor(val b: Double, val angle: Double) {
     fun crossPoint(other: Line): Point {
         val x1 = (other.b / cos(other.angle) - b / cos(angle)) / (tan(angle) - tan(other.angle))
         var y1 = (x1 * sin(other.angle) + other.b) / cos(other.angle)
-        if (y1 == 0.0 || (other.b + x1 < 1e-5 && y1 != 0.0) && b != -other.b && abs(angle / other.angle - 2.0) < 1e-5)
-            y1 = (x1 * sin(angle) + b) / cos(angle)
+        if ((y1 * cos(other.angle) - other.b) / sin(other.angle) == x1) y1 = (x1 * sin(angle) + b) / cos(angle)
         return Point(x1, y1)
     }
 
@@ -232,11 +231,12 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun main() {
     print(
         circleByThreePoints(
-            Point(0.0, -2.220446049250313e-16),
-            Point(-632.0, -5e-324),
-            Point(0.7386375489926822, -632.0)
+            Point(0.1897923957978861, 0.7908968734722072),
+            Point(0.7329696378086544, -632.0),
+            Point(-632.0, -632.0)
         )
     )
+
 }
 
 /**
