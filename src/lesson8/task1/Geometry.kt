@@ -167,7 +167,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val tg = (s.begin.y - s.end.y) / (s.begin.x - s.end.x)
+    val tg = (s.end.y - s.begin.y) / (s.end.x - s.begin.x)
     return if (tg >= 0) Line(s.begin, atan(tg))
     else Line(s.begin, (PI - atan(-tg)) % PI)
 }
@@ -223,11 +223,8 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
-    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(
-        a,
-        b,
-        c
-    ).area())//Формула радиуса описанной окружности треугольника
+    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+    //Формула радиуса описанной окружности треугольника
     return Circle(center, radius)
 }
 
@@ -246,7 +243,6 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw IllegalAccessException()
     if (points.size == 1) return Circle(points.first(), 0.0)
     val diameter = diameter(*points)//отрезок между самыми далекими точками
-    if (points.size == 2) return circleByDiameter(diameter)
     var thirdPoint = Point(0.0, 0.0)
     var circle = circleByDiameter(diameter)
     var maxDist = 0.0
