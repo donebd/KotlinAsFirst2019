@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import kotlin.math.pow
-
 /**
  * Пример
  *
@@ -94,14 +92,8 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val result = mutableMapOf<Int, MutableList<String>>()
-    for ((name, mark) in grades) {
-        var list = result[mark]
-        if (list == null) {
-            list = mutableListOf()
-            result[mark] = list
-        }
-        list.add(name)
-    }
+    for ((name, mark) in grades)
+        result.getOrPut(mark, { mutableListOf() }).add(name)
     return result
 }
 
@@ -116,7 +108,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key) in a) if (a[key] != b[key]) return false
+    for ((key, value) in a) if (value != b[key]) return false
     return true
 }
 
@@ -135,7 +127,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    for ((key) in b) if (a[key] == b[key]) a.remove(key)
+    for ((key, value) in b) if (value == a[key]) a.remove(key)
 }
 
 /**
@@ -146,9 +138,9 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val answer = mutableListOf<String>()
-    for (i in a) if (!answer.contains(i) && b.contains(i)) answer.add(i)
-    return answer
+    val answer = mutableSetOf<String>()
+    for (i in a) if (i in b) answer.add(i)
+    return answer.toList()
 }
 
 /**
@@ -170,7 +162,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val answer = mapA.toMutableMap()
-    for ((key, number) in mapB) if (answer.contains(key) && number != answer[key])
+    for ((key, number) in mapB) if (key in answer && number != answer[key])
         answer[key] += ", $number" else answer[key] = number
     return answer
 }
@@ -186,7 +178,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val answer = stockPrices.toMap().toMutableMap()
+    val answer = mutableMapOf<String, Double>()
     for ((a) in stockPrices) {
         answer[a] =
             stockPrices.filter { it.first == a }.sumByDouble { it.second } / stockPrices.filter { it.first == a }.size
