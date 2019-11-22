@@ -178,11 +178,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val answer = mutableMapOf<String, Double>()
-    for ((a) in stockPrices) {
-        answer[a] =
-            stockPrices.filter { it.first == a }.sumByDouble { it.second } / stockPrices.filter { it.first == a }.size
+    val answer = mutableMapOf<String, Double>()//sum
+    val count = mutableMapOf<String, Int>()
+    for ((a, value) in stockPrices) {
+        answer[a] = answer.getOrPut(a, { 0.0 }) + value
+        count[a] = count.getOrPut(a, { 0 }) + 1
     }
+    for ((a, value) in answer)
+        answer[a] = value / count[a]!!
     return answer
 }
 
@@ -217,8 +220,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (element in word) if (element.toLowerCase() !in chars.toMutableList().map { it.toLowerCase() }) return false
-    return true
+    val word1 = word.toList().toMutableSet().map { it.toLowerCase() }.sorted()
+    val chars1 = chars.toMutableSet().map { it.toLowerCase() }.sorted()
+    return (word1 == chars1)
 }
 
 /**
@@ -235,8 +239,10 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val answer = mutableMapOf<String, Int>()
-    for (i in list) if (list.filter { it == i }.size != 1) answer[i] = list.filter { it == i }.size
-    return answer
+    for (i in list) {
+        answer[i] = answer.getOrPut(i, { 0 }) + 1
+    }
+    return answer.filter { it.value != 1 }
 }
 
 /**
@@ -250,8 +256,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  */
 fun hasAnagrams(words: List<String>): Boolean {
     val list = words.toMutableList().map { it.toCharArray().sorted().joinToString("") }
-    for (i in list) if (list.filter { it == i }.size != 1) return true
-    return false
+    return (list != list.distinct())
 }
 
 /**
@@ -308,8 +313,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in 0..list.size - 2)
-        for (j in i + 1 until list.size) if (list[i] + list[j] == number) return Pair(i, j)
+    var index1 = -1
+    if (list.isNotEmpty())
+        for (i in list.filter { it <= number }.sorted()) {
+            index1++
+            val index2 = list.indexOf(number - i)
+            if (index2 != -1 && index2 != index1) {
+                return Pair(index1, index2)
+            }
+        }
     return Pair(-1, -1)
 }
 
