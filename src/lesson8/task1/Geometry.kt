@@ -76,8 +76,7 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = if (center.distance(other.center) <= radius + other.radius) 0.0
-    else center.distance(other.center) - radius - other.radius
+    fun distance(other: Circle): Double = maxOf(center.distance(other.center) - radius - other.radius, 0.0)
 
     /**
      * Тривиальная
@@ -196,10 +195,10 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
-    var minDist = 10000.0
-    var x = Circle(Point(0.0, 0.0), 0.0)
-    var y = Circle(Point(0.0, 0.0), 0.0)
     if (circles.size < 2) throw IllegalAccessException()
+    var x = circles.first()
+    var y = circles.last()
+    var minDist = Double.POSITIVE_INFINITY
     for (i in circles)
         for (j in circles) {
             if (i != j && minDist > i.distance(j)) {
