@@ -312,8 +312,13 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val map1 = mutableMapOf<Int, Pair<Int, Int>>()
     val map2 = mutableMapOf<Int, Int>()
     for (i in list.filter { it < number / 2 }.indices) map1[list[i]] = Pair(number - list[i], i)
-    for (i in list.filter { it > number / 2 && it <= number }.indices) map2[list[i + map1.size + 1]] = i + map1.size + 1
+    val mapSize = map1.size
+    for (i in list.filter { it > number / 2 && it <= number }.indices) map2[list[i + mapSize + 1]] = i + mapSize + 1
     for ((key, value) in map1) if (map2[number - key] != null) return Pair(value.second, map2[number - key]!!)
+
+    if (list.filter { it == number / 2 }.size > 1) return Pair(list.indexOf(number / 2), list.lastIndexOf(number / 2))
+    //учитывание двух одинаковых половинок числа
+
     return Pair(-1, -1)
 }
 
