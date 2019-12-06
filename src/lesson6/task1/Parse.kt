@@ -59,6 +59,26 @@ fun main() {
     }
 }
 
+fun month(a: String): String {
+    val month = mapOf(
+        "января" to "01",
+        "февраля" to "02",
+        "марта" to "03",
+        "апреля" to "04",
+        "мая" to "05",
+        "июня" to "06",
+        "июля" to "07",
+        "августа" to "08",
+        "сентября" to "09",
+        "октября" to "10",
+        "ноября" to "11",
+        "декабря" to "12"
+    )
+    if (a in month.keys) return month[a]!!
+    if (a in month.values) for ((key, value) in month) if (value == a) return key
+    return ""
+}
+
 /**
  * Средняя
  *
@@ -74,23 +94,9 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     if (date.size != 3 || date[0].toIntOrNull() == null || date[2].toIntOrNull() == null) return ""
     val day = date[0].toInt()
-    val month = when (date[1]) {
-        "января" -> 1
-        "февраля" -> 2
-        "марта" -> 3
-        "апреля" -> 4
-        "мая" -> 5
-        "июня" -> 6
-        "июля" -> 7
-        "августа" -> 8
-        "сентября" -> 9
-        "октября" -> 10
-        "ноября" -> 11
-        "декабря" -> 12
-        else -> 0
-    }
-    if (month == 0 || daysInMonth(month, date[2].toInt()) < day) return ""
-    return String.format("%02d.%02d.%s", day, month, date[2])
+    val month = month(date[1])
+    if (month == "" || daysInMonth(month.toInt(), date[2].toInt()) < day) return ""
+    return String.format("%02d.%s.%s", day, month, date[2])
 }
 
 /**
@@ -107,21 +113,7 @@ fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     if (date.size != 3 || date[0].toIntOrNull() == null || date[2].toIntOrNull() == null || date[1].toIntOrNull() == null) return ""
     val day = date[0].toInt()
-    val month = when (date[1]) {
-        "01" -> "января"
-        "02" -> "февраля"
-        "03" -> "марта"
-        "04" -> "апреля"
-        "05" -> "мая"
-        "06" -> "июня"
-        "07" -> "июля"
-        "08" -> "августа"
-        "09" -> "сентября"
-        "10" -> "октября"
-        "11" -> "ноября"
-        "12" -> "декабря"
-        else -> ""
-    }
+    val month = month(date[1])
     if (month == "" || daysInMonth(date[1].toInt(), date[2].toInt()) < day) return ""
     return String.format("%d %s %s", day, month, date[2])
 }
