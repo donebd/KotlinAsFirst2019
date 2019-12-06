@@ -44,7 +44,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun main() {
+/*fun main() {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -57,7 +57,7 @@ fun main() {
     } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
-}
+}*/
 
 fun month(a: String): String {
     val month = mapOf(
@@ -146,11 +146,10 @@ fun flattenPhoneNumber(phone: String): String =
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (Regex(pattern = """[\d\s-%]""").replace(jumps, "") != "" || jumps == "")
-        return -1
-    val str = mutableListOf<Int>()
-    for (i in Regex(pattern = """\d{3}""").findAll(jumps)) str.add(i.value.toInt())
-    return if (str.max() != null) str.max()!! else -1
+    val str = Regex("""\d+\s*(-?%?\d?\s*)*""").matchEntire(jumps)?.value.orEmpty()
+    val jump = mutableListOf<Int>()
+    for (i in Regex("""\d+""").findAll(str)) jump.add(i.value.toInt())
+    return jump.max() ?: -1
 }
 
 /**
@@ -165,15 +164,12 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (Regex(pattern = """[\d\s-+%]""").replace(jumps, "") != "" ||
-        jumps == "" || !jumps.contains(Regex("""\d++\s*\+"""))
-    )
-        return -1
-    val str = mutableListOf<Int>()
+    val str = Regex("""\d+\s*(%*\+?-?\s*\d?\s*)*""").matchEntire(jumps)?.value.orEmpty()
+    val jump = mutableListOf<Int>()
     for (i in
-    Regex(pattern = """\d{3}""").findAll(Regex(pattern = """(\d*\s*%+-*)|(\d*\s*%+\+*)""").replace(jumps, "")))
-        str.add(i.value.toInt())
-    return if (str.max() != null) str.max()!! else -1
+    Regex(pattern = """\d+""").findAll(Regex(pattern = """(\d*\s*%+-*)|(\d*\s*%+\+*)""").replace(str, "")))
+        jump.add(i.value.toInt())
+    return jump.max() ?: -1
 }
 
 /**
@@ -201,7 +197,7 @@ fun firstDuplicateIndex(str: String): Int {
     var index = 1 + str[0].length
     if (str.size > 1)
         for (i in 1 until str.size) {
-            if (str[i - 1] == str[i]) return index - str[i].length - 1
+            if (str[i - 1] == str[i]) return index - str[i - 1].length - 1
             index += str[i].length + 1
         }
     return -1
