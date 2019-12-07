@@ -4,6 +4,7 @@ package lesson8.task2
 
 import kotlin.math.abs
 import lesson8.task3.Graph
+import kotlin.math.pow
 
 
 /**
@@ -30,12 +31,10 @@ data class Square(val column: Int, val row: Int) {
     else ""
 }
 
-fun squareByVertex(notation: Graph.Vertex): Square {
-    val temp = Regex(pattern = """[^\d]""").replace(notation.toString(), "")
-    return if (temp.length == 2 && Square(temp[0] - '0', temp[1] - '0').inside())
-        Square(temp[0] - '0', temp[1] - '0')
+fun squareByNumber(notation: String): Square =
+    if (notation.length == 2 && Square(notation[0] - '0', notation[1] - '0').inside())
+        Square(notation[0] - '0', notation[1] - '0')
     else throw IllegalArgumentException("Такой ячейки не существует")
-}
 
 /**
  * Простая
@@ -44,10 +43,7 @@ fun squareByVertex(notation: Graph.Vertex): Square {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square =
-    if (notation.length == 2 && Square(notation[0] - 'a' + 1, notation[1] - '0').inside())
-        Square(notation[0] - 'a' + 1, notation[1] - '0')
-    else throw IllegalArgumentException("Такой ячейки не существует")
+fun square(notation: String): Square = squareByNumber((notation[0] - 'a' + 1).toString() + notation[1])
 
 /**
  * Простая
@@ -75,9 +71,11 @@ fun square(notation: String): Square =
 
 fun rookMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside()) { "Такой ячейки не существует" }
-    if (start == end) return 0
-    return if (start.column == end.column || start.row == end.row) 1
-    else 2
+    return when {
+        start == end -> 0
+        (start.column == end.column || start.row == end.row) -> 1
+        else -> 2
+    }
 }
 
 /**
@@ -125,11 +123,13 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNum
  */
 fun bishopMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside()) { "Такой ячейки не существует" }
-    if (start == end) return 0
-    return if ((start.row + start.column) % 2 == (end.row + end.column) % 2)
-        if (abs(end.row - start.row) == abs(end.column - start.column)) 1
-        else 2
-    else -1
+    return when {
+        start == end -> 0
+        (start.row + start.column) % 2 == (end.row + end.column) % 2 -> {
+            if (abs(end.row - start.row) == abs(end.column - start.column)) 1 else 2
+        }
+        else -> -1
+    }
 }
 
 /**
@@ -164,6 +164,20 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
     }
 }
 
+fun kingCondition(start: Square, end: Square): Pair<Int, Int> {
+    val condition1 = when {
+        start.column > end.column -> -1
+        start.column < end.column -> 1
+        else -> 0
+    }
+    val condition2 = when {
+        start.row > end.row -> -1
+        start.row < end.row -> 1
+        else -> 0
+    }
+    return Pair(condition1, condition2)
+}
+
 /**
  * Средняя
  *
@@ -184,27 +198,15 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int =
-    when {
+fun kingMoveNumber(start: Square, end: Square): Int {
+    val condition = kingCondition(start, end)
+    return when {
         !start.inside() || !end.inside() -> throw IllegalArgumentException()
         start == end -> 0
         end.column in start.column - 1..start.column + 1 && end.row in start.row - 1..start.row + 1 -> 1
-        start.column > end.column -> when {
-            start.row > end.row -> 1 + kingMoveNumber(Square(start.column - 1, start.row - 1), end)
-            start.row < end.row -> 1 + kingMoveNumber(Square(start.column - 1, start.row + 1), end)
-            else -> 1 + kingMoveNumber(Square(start.column - 1, start.row), end)
-        }
-        start.column < end.column -> when {
-            start.row > end.row -> 1 + kingMoveNumber(Square(start.column + 1, start.row - 1), end)
-            start.row < end.row -> 1 + kingMoveNumber(Square(start.column + 1, start.row + 1), end)
-            else -> 1 + kingMoveNumber(Square(start.column + 1, start.row), end)
-        }
-        else -> when {
-            start.row > end.row -> 1 + kingMoveNumber(Square(start.column, start.row - 1), end)
-            start.row < end.row -> 1 + kingMoveNumber(Square(start.column, start.row + 1), end)
-            else -> 1 + kingMoveNumber(Square(start.column, start.row), end)
-        }
+        else -> 1 + kingMoveNumber(Square(start.column + condition.first, start.row + condition.second), end)
     }
+}
 
 
 /**
@@ -222,26 +224,28 @@ fun kingMoveNumber(start: Square, end: Square): Int =
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun kingTrajectory(start: Square, end: Square): List<Square> {
+    val condition = kingCondition(start, end)
     val answerList = mutableListOf(start)
     if (kingMoveNumber(start, end) >= 1)
-        return when {
-            start.column > end.column -> when {
-                start.row > end.row -> answerList + kingTrajectory(Square(start.column - 1, start.row - 1), end)
-                start.row < end.row -> answerList + kingTrajectory(Square(start.column - 1, start.row + 1), end)
-                else -> answerList + kingTrajectory(Square(start.column - 1, start.row), end)
-            }
-            start.column < end.column -> when {
-                start.row > end.row -> answerList + kingTrajectory(Square(start.column + 1, start.row - 1), end)
-                start.row < end.row -> answerList + kingTrajectory(Square(start.column + 1, start.row + 1), end)
-                else -> answerList + kingTrajectory(Square(start.column + 1, start.row), end)
-            }
-            else -> when {
-                start.row > end.row -> answerList + kingTrajectory(Square(start.column, start.row - 1), end)
-                start.row < end.row -> answerList + kingTrajectory(Square(start.column, start.row + 1), end)
-                else -> answerList + kingTrajectory(Square(start.column, start.row), end)
-            }
-        }
+        return answerList + kingTrajectory(Square(start.column + condition.first, start.row + condition.second), end)
     return listOf(end)
+}
+
+fun createMoveGraph(start: Square, end: Square): Graph {
+    val chess = Graph()
+    for (i in 1..8)
+        for (j in 1..8)
+            chess.addVertex("$i$j")
+    for (i in 1..8)
+        for (j in 1..8)
+            for (a in 1..2)
+                for (b in 1..2) {
+                    if (Square(i + (-2 * (-1.0).pow(a).toInt()), j + (-1.0).pow(b).toInt()).inside())
+                        chess.connect("$i$j", "${i + (-2 * (-1.0).pow(a).toInt())}${j + (-1.0).pow(b).toInt()}")
+                    if (Square(i + (-1.0).pow(b).toInt(), j + (-2 * (-1.0).pow(a).toInt())).inside())
+                        chess.connect("$i$j", "${i + (-1.0).pow(b).toInt()}${j + (-2 * (-1.0).pow(a).toInt())}")
+                }
+    return chess
 }
 
 /**
@@ -268,21 +272,7 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
 fun knightMoveNumber(start: Square, end: Square): Int {
-    val chess = Graph()
-    for (i in 1..8)
-        for (j in 1..8)
-            chess.addVertex("$i$j")
-    for (i in 1..8)
-        for (j in 1..8) {
-            if (Square(i - 2, j - 1).inside()) chess.connect("$i$j", "${i - 2}${j - 1}")
-            if (Square(i - 2, j + 1).inside()) chess.connect("$i$j", "${i - 2}${j + 1}")
-            if (Square(i - 1, j - 2).inside()) chess.connect("$i$j", "${i - 1}${j - 2}")
-            if (Square(i - 1, j + 2).inside()) chess.connect("$i$j", "${i - 1}${j + 2}")
-            if (Square(i + 1, j + 2).inside()) chess.connect("$i$j", "${i + 1}${j + 2}")
-            if (Square(i + 1, j - 2).inside()) chess.connect("$i$j", "${i + 1}${j - 2}")
-            if (Square(i + 2, j + 1).inside()) chess.connect("$i$j", "${i + 2}${j + 1}")
-            if (Square(i + 2, j - 1).inside()) chess.connect("$i$j", "${i + 2}${j - 1}")
-        }
+    val chess = createMoveGraph(start, end)
     val i = start.column.toString() + start.row.toString()
     val j = end.column.toString() + end.row.toString()
     return chess.bfs(i, j).first
@@ -309,27 +299,13 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun knightTrajectory(start: Square, end: Square): List<Square> {
-    val chess = Graph()
-    for (i in 1..8)
-        for (j in 1..8)
-            chess.addVertex("$i$j")
-    for (i in 1..8)
-        for (j in 1..8) {
-            if (Square(i - 2, j - 1).inside()) chess.connect("$i$j", "${i - 2}${j - 1}")
-            if (Square(i - 2, j + 1).inside()) chess.connect("$i$j", "${i - 2}${j + 1}")
-            if (Square(i - 1, j - 2).inside()) chess.connect("$i$j", "${i - 1}${j - 2}")
-            if (Square(i - 1, j + 2).inside()) chess.connect("$i$j", "${i - 1}${j + 2}")
-            if (Square(i + 1, j + 2).inside()) chess.connect("$i$j", "${i + 1}${j + 2}")
-            if (Square(i + 1, j - 2).inside()) chess.connect("$i$j", "${i + 1}${j - 2}")
-            if (Square(i + 2, j + 1).inside()) chess.connect("$i$j", "${i + 2}${j + 1}")
-            if (Square(i + 2, j - 1).inside()) chess.connect("$i$j", "${i + 2}${j - 1}")
-        }
+    val chess = createMoveGraph(start, end)
     val i = start.column.toString() + start.row.toString()
     var j = end.column.toString() + end.row.toString()
     val answer = mutableListOf(end)
     while (chess.bfs(i, j).first > 0) {
         val tempVertex = chess.bfs(i, j).second
-        val tempSquare = squareByVertex(tempVertex)
+        val tempSquare = squareByNumber(tempVertex.name)
         answer.add(tempSquare)
         j = tempSquare.column.toString() + tempSquare.row.toString()
     }
