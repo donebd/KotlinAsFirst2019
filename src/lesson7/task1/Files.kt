@@ -55,15 +55,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val answer = mutableMapOf<String, Int>()
+    val text = File(inputName).readText().toLowerCase()
     for (subWord in substrings) {
         var k = 0
-        for (line in File(inputName).readLines()) {
-            var j = 0
-            while (Regex(subWord.toLowerCase()).find(line.toLowerCase(), j)?.value != null) {
-                k++
-                val i = line.toLowerCase().indexOf(subWord.toLowerCase(), j)
-                j = i + 1
-            }
+        var j = 0
+        while (text.findAnyOf(listOf(subWord.toLowerCase()), j) != null) {
+            k++
+            val i = text.indexOf(subWord.toLowerCase(), j)
+            j = i + 1
         }
         answer[subWord] = k
     }
@@ -84,29 +83,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val chage =
-        listOf(
-            "жы", "жЫ", "Жы", "ЖЫ", "жя", "жЯ", "Жя", "ЖЯ", "жю", "жЮ", "Жю", "ЖЮ",
-            "чы", "чЫ", "Чы", "ЧЫ", "чя", "чЯ", "Чя", "ЧЯ", "чю", "чЮ", "Чю", "ЧЮ",
-            "шы", "шЫ", "Шы", "ШЫ", "шя", "шЯ", "Шя", "ШЯ", "шю", "шЮ", "Шю", "ШЮ",
-            "щы", "щЫ", "Щы", "ЩЫ", "щя", "щЯ", "Щя", "ЩЯ", "щю", "щЮ", "Щю", "ЩЮ"
-        )
-    val chage1 =
-        listOf(
-            "жи", "жИ", "Жи", "ЖИ", "жа", "жА", "Жа", "ЖА", "жу", "жУ", "Жу", "ЖУ",
-            "чи", "чИ", "Чи", "ЧИ", "ча", "чА", "Ча", "ЧА", "чу", "чУ", "Чу", "ЧУ",
-            "ши", "шИ", "Ши", "ШИ", "ша", "шА", "Ша", "ША", "шу", "шУ", "Шу", "ШУ",
-            "щи", "щИ", "Щи", "ЩИ", "ща", "щА", "Ща", "ЩА", "щу", "щУ", "Щу", "ЩУ"
-        )
+    val change = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
     File(outputName).bufferedWriter().use {
-        for (line in File(inputName).readLines()) {
-            var newLine = line
-            for (i in chage.indices) {
-                while (newLine.contains(chage[i])) newLine = newLine.replace(chage[i], chage1[i])
-            }
-            it.write(newLine)
-            it.newLine()
+        var text = File(inputName).readText()
+        var previous = ' '
+        var k = 0
+        for (i in text) {
+            if (previous in "ЖШЧЩжшчщ" && change[i] != null) text = text.replaceRange(k, k + 1, change[i].toString())
+            previous = i
+            k++
         }
+        it.write(text)
     }
 }
 
