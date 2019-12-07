@@ -137,7 +137,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = b.minus(b.minus(a)).toList()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = b.distinct().minus(b.distinct().minus(a.distinct()))
 
 /**
  * Средняя
@@ -316,7 +316,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in list.filter { it > number / 2 && it <= number }.indices) map2[list[i + mapSize + 1]] = i + mapSize + 1
     for ((key, value) in map1) if (map2[number - key] != null) return Pair(value.second, map2[number - key]!!)
 
-    if (list.filter { it == number / 2 }.size > 1) return Pair(list.indexOf(number / 2), list.lastIndexOf(number / 2))
+    if (number % 2 == 0 && list.filter { it == number / 2 }.size > 1) return Pair(list.indexOf(number / 2), list.lastIndexOf(number / 2))
     //учитывание двух одинаковых половинок числа
 
     return Pair(-1, -1)

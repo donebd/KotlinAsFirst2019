@@ -43,7 +43,9 @@ fun squareByNumber(notation: String): Square =
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = squareByNumber((notation[0] - 'a' + 1).toString() + notation[1])
+fun square(notation: String): Square =
+    if (notation.length == 2) squareByNumber((notation[0] - 'a' + 1).toString() + notation[1]) else
+        throw IllegalArgumentException("Такой ячейки не существует")
 
 /**
  * Простая
