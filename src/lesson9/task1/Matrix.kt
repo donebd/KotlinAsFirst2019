@@ -34,6 +34,14 @@ interface Matrix<E> {
     operator fun set(cell: Cell, value: E)
 }
 
+fun <E> Matrix<E>.inside(height1: Int, width1: Int): Boolean =
+    height1 < height && height1 > -1 && width1 < width && width1 > -1
+
+fun <E> Matrix<E>.insideOrNull(height1: Int, width1: Int) = if (inside(height1, width1)) get(height1, width1) else null
+
+val <E> Matrix<E>.capacity
+    get() = width * height
+
 /**
  * Простая
  *
@@ -85,8 +93,3 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, value: E)
     }
 
 }
-
-fun capacity(matrix: Matrix<*>): Int = matrix.height * matrix.width
-
-fun inside(matrix: Matrix<*>, height: Int, width: Int): Boolean =
-    height < matrix.height && height > -1 && width < matrix.width && width > -1

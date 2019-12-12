@@ -64,29 +64,14 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var i = 0
     var j = 0
     answer[i, j] = 1
-    for (a in 2..capacity(answer)) {
+    for (a in 2..answer.capacity) {
         when {
-            inside(answer, i, j + 1) && answer[i, j + 1] == 0 && (!inside(
-                answer,
-                i - 1,
-                j
-            ) || answer[i - 1, j] != 0) -> {
-                j++
-                answer[i, j] = a
-            }
-            inside(answer, i + 1, j) && (j + 1 == width || answer[i, j + 1] != 0) && answer[i + 1, j] == 0 -> {
-                i++
-                answer[i, j] = a
-            }
-            inside(answer, i, j - 1) && (i + 1 == height || answer[i + 1, j] != 0) && answer[i, j - 1] == 0 -> {
-                j--
-                answer[i, j] = a
-            }
-            inside(answer, i - 1, j) && answer[i - 1, j] == 0 -> {
-                i--
-                answer[i, j] = a
-            }
+            answer.insideOrNull(i, j + 1) == 0 && answer.insideOrNull(i - 1, j) != 0 -> j++
+            answer.insideOrNull(i + 1, j) == 0 && answer.insideOrNull(i, j + 1) != 0 -> i++
+            answer.insideOrNull(i, j - 1) == 0 && answer.insideOrNull(i + 1, j) != 0 -> j--
+            answer.insideOrNull(i - 1, j) == 0 -> i--
         }
+        answer[i, j] = a
     }
     return answer
 }
@@ -116,7 +101,6 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
         for (i in 0 until width) {
             if (answer[a - 1, i] == 0) answer[a - 1, i] = a
             if (answer[height - a, i] == 0) answer[height - a, i] = a
-
         }
         a++
     }
