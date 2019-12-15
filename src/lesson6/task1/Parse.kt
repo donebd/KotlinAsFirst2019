@@ -59,25 +59,20 @@ fun timeSecondsToStr(seconds: Int): String {
     }
 }*/
 
-fun month(a: String): String {
-    val month = mapOf(
-        "января" to "01",
-        "февраля" to "02",
-        "марта" to "03",
-        "апреля" to "04",
-        "мая" to "05",
-        "июня" to "06",
-        "июля" to "07",
-        "августа" to "08",
-        "сентября" to "09",
-        "октября" to "10",
-        "ноября" to "11",
-        "декабря" to "12"
-    )
-    if (a in month.keys) return month[a]!!
-    if (a in month.values) for ((key, value) in month) if (value == a) return key
-    return ""
-}
+val month = mapOf(
+    "января" to "01",
+    "февраля" to "02",
+    "марта" to "03",
+    "апреля" to "04",
+    "мая" to "05",
+    "июня" to "06",
+    "июля" to "07",
+    "августа" to "08",
+    "сентября" to "09",
+    "октября" to "10",
+    "ноября" to "11",
+    "декабря" to "12"
+)
 
 /**
  * Средняя
@@ -94,7 +89,7 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     if (date.size != 3 || date[0].toIntOrNull() == null || date[2].toIntOrNull() == null) return ""
     val day = date[0].toInt()
-    val month = month(date[1])
+    val month = month[date[1]] ?: ""
     if (month == "" || daysInMonth(month.toInt(), date[2].toInt()) < day) return ""
     return String.format("%02d.%s.%s", day, month, date[2])
 }
@@ -113,7 +108,7 @@ fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     if (date.size != 3 || date[0].toIntOrNull() == null || date[2].toIntOrNull() == null || date[1].toIntOrNull() == null) return ""
     val day = date[0].toInt()
-    val month = month(date[1])
+    val month = month.filterValues { it == date[1] }.maxBy { true }?.key ?: ""
     if (month == "" || daysInMonth(date[1].toInt(), date[2].toInt()) < day) return ""
     return String.format("%d %s %s", day, month, date[2])
 }
