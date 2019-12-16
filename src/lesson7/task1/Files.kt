@@ -59,11 +59,11 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (subWord in substrings) {
         var k = 0
         var j = 0
-        var a = text.indexOf(subWord.toLowerCase(), j)
-        while (a != -1) {
+        var index = text.indexOf(subWord.toLowerCase(), j)
+        while (index != -1) {
             k++
-            j = a + 1
-            a = text.indexOf(subWord.toLowerCase(), j)
+            j = index + 1
+            index = text.indexOf(subWord.toLowerCase(), j)
         }
         answer[subWord] = k
     }
