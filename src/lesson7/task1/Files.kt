@@ -59,10 +59,11 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (subWord in substrings) {
         var k = 0
         var j = 0
-        while (text.findAnyOf(listOf(subWord.toLowerCase()), j) != null) {
+        var a = text.indexOf(subWord.toLowerCase(), j)
+        while (a != -1) {
             k++
-            val i = text.indexOf(subWord.toLowerCase(), j)
-            j = i + 1
+            j = a + 1
+            a = text.indexOf(subWord.toLowerCase(), j)
         }
         answer[subWord] = k
     }
@@ -306,14 +307,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.write("<p>")
             } else if (k != -1) k++
             newLine = line
-            for (i in edit.indices)
-                while (newLine.contains(edit[i]))
-                    if (checkArr[i] == 0) {
-                        newLine = newLine.replaceFirst(edit[i], editOpen[i])
-                        checkArr[i] = 1
+            for ((index, value) in edit.withIndex())
+                while (newLine.contains(value))
+                    if (checkArr[index] == 0) {
+                        newLine = newLine.replaceFirst(value, editOpen[index])
+                        checkArr[index] = 1
                     } else {
-                        newLine = newLine.replaceFirst(edit[i], editClose[i])
-                        checkArr[i] = 0
+                        newLine = newLine.replaceFirst(value, editClose[index])
+                        checkArr[index] = 0
                     }
             it.write(newLine)
 
