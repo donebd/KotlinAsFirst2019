@@ -31,10 +31,11 @@ data class Square(val column: Int, val row: Int) {
     else ""
 }
 
-fun squareByNumber(notation: String): Square =
-    if (notation.length == 2 && Square(notation[0] - '0', notation[1] - '0').inside())
-        Square(notation[0] - '0', notation[1] - '0')
+fun squareByNumber(notation: String): Square {
+    val square = Square(notation[0] - '0', notation[1] - '0')
+    return if (notation.length == 2 && square.inside()) square
     else throw IllegalArgumentException("Такой ячейки не существует")
+}
 
 /**
  * Простая
