@@ -108,7 +108,9 @@ fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     if (date.size != 3 || date[0].toIntOrNull() == null || date[2].toIntOrNull() == null || date[1].toIntOrNull() == null) return ""
     val day = date[0].toInt()
-    val month = month.filterValues { it == date[1] }.maxBy { true }?.key ?: ""
+    val month = if (month.containsValue(date[1]))
+        month.toList().first { it.second == date[1] }.first
+    else ""
     if (month == "" || daysInMonth(date[1].toInt(), date[2].toInt()) < day) return ""
     return String.format("%d %s %s", day, month, date[2])
 }
