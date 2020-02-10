@@ -26,17 +26,19 @@ class Polynom(vararg coeffs: Double) {
 
     private var coeffsList = coeffs.toList()
 
+    private var reversCoefss = coeffsList.reversed()
+
     private var maxCoeff = coeffs.size - 1
 
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
-    fun coeff(i: Int): Double = coeffsList.reversed()[i]
+    fun coeff(i: Int): Double = reversCoefss[i]
 
     /**
      * Расчёт значения при заданном x
      */
-    fun getValue(x: Double): Double = coeffsList.reversed().indices.map { coeffsList.reversed()[it] * x.pow(it) }.sum()
+    fun getValue(x: Double): Double = reversCoefss.indices.map { reversCoefss[it] * x.pow(it) }.sum()
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -86,15 +88,12 @@ class Polynom(vararg coeffs: Double) {
      * Умножение
      */
     operator fun times(other: Polynom): Polynom {
-        var tmpList = mutableListOf<Double>()
         var answPolynom = Polynom()
-        for (i in coeffsList.reversed().indices) {
-            tmpList = other.coeffsList.toMutableList()
-            if (coeffsList[i] != 0.0) {
-                for (j in tmpList.indices) tmpList[j] *= coeffsList.reversed()[i]
-                for (j in 1..i) tmpList.add(0.0)
-                answPolynom += Polynom(*tmpList.toDoubleArray())
-            }
+        for (i in reversCoefss.indices) {
+            val tmpList = other.coeffsList.toMutableList()
+            for (j in tmpList.indices) tmpList[j] *= reversCoefss[i]
+            for (j in 1..i) tmpList.add(0.0)
+            answPolynom += Polynom(*tmpList.toDoubleArray())
         }
         return answPolynom
     }
@@ -107,20 +106,35 @@ class Polynom(vararg coeffs: Double) {
      *
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
-    operator fun div(other: Polynom): Polynom = TODO()
+    operator fun div(other: Polynom): Polynom {
+        val newMaxCoeff = Pair(degree() - other.degree(), coeff(degree()) / other.coeff(other.degree()))
+        if (newMaxCoeff.first < 0 || (degree() == 0 && coeff(0) == 0.0)) return Polynom(0.0)
+        val answList = mutableListOf(newMaxCoeff.second)
+        for (i in 1..newMaxCoeff.first) answList.add(0.0)
+        val answPolynom = Polynom(*answList.toDoubleArray())
+        val tmpPolynom = other * answPolynom
+        val remainderPolynom = this - tmpPolynom
+        return answPolynom + remainderPolynom.div(other)
+    }
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: Polynom): Polynom = TODO()
+    operator fun rem(other: Polynom): Polynom = this - (this / other * other)
 
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean =
+        other is Polynom && (this - other).degree() == 0 && (this - other).coeff(0) == 0.0
 
     /**
      * Получение хеш-кода
      */
-    override fun hashCode(): Int = TODO()
+    override fun hashCode(): Int {
+        var result = coeffsList.hashCode()
+        result = 31 * result + reversCoefss.hashCode()
+        result = 31 * result + maxCoeff
+        return result
+    }
 }
