@@ -15,6 +15,12 @@ class PolynomTest {
     }
 
     @Test
+    fun coeff() {
+        val p = Polynom(1.0, 3.0, 2.0)
+        assertEquals(1.0, p.coeff(2))
+    }
+
+    @Test
     @Tag("Easy")
     fun getValue() {
         val p = Polynom(1.0, 3.0, 2.0)
@@ -65,9 +71,12 @@ class PolynomTest {
     fun times() {
         val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
         val p2 = Polynom(1.0, 3.0, 2.0)
+        val p3 = Polynom(0.0, 0.0, 2.0)
+        val p4 = Polynom(1.0, 0.0)
         val r = Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0)
         assertApproxEquals(r, p1 * p2, 1e-10)
         assertApproxEquals(r, p2 * p1, 1e-10)
+        assertApproxEquals(Polynom(2.0, 0.0), p3 * p4, 1e-10)
     }
 
     @Test
@@ -86,7 +95,7 @@ class PolynomTest {
         val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
         val p2 = Polynom(1.0, 3.0, 2.0)
         val r = Polynom(1.0, -5.0)
-        val q = Polynom(12.0, 16.0)
+        val q = Polynom(12.0, 14.0)
         assertApproxEquals(q, p1 % p2, 1e-10)
         assertApproxEquals(p1, p2 * r + q, 1e-10)
     }
