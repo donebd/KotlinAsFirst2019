@@ -2,6 +2,7 @@
 
 package lesson11.task1
 
+import java.lang.IllegalArgumentException
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -30,6 +31,8 @@ class Polynom(vararg coeffs: Double) {
 
     private var maxCoeff = coeffs.size - 1
 
+    private fun empty() = degree() == 0 && coeff(0) == 0.0
+
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
@@ -51,19 +54,24 @@ class Polynom(vararg coeffs: Double) {
         if (coeffsList.any { it != 0.0 }) maxCoeff - coeffsList.indices.first { coeffsList[it] != 0.0 }
         else 0
 
-    /**
-     * Сложение
-     */
-    operator fun plus(other: Polynom): Polynom {
+    private fun plusOrMinus(other: Polynom, switch: Int): Polynom {
         val answList = MutableList(max(degree(), other.degree()) + 1) { 0.0 }
         for (i in answList.indices) {
             if (i <= maxCoeff)
                 answList[i] += coeffsList[maxCoeff - i]
             if (i <= other.maxCoeff)
-                answList[i] += other.coeffsList[other.maxCoeff - i]
+                when (switch) {
+                    1 -> answList[i] += other.coeffsList[other.maxCoeff - i]
+                    else -> answList[i] -= other.coeffsList[other.maxCoeff - i]
+                }
         }
         return Polynom(*answList.reversed().toDoubleArray())
     }
+
+    /**
+     * Сложение
+     */
+    operator fun plus(other: Polynom): Polynom = plusOrMinus(other, 1)
 
     /**
      * Смена знака (при всех слагаемых)
@@ -73,16 +81,7 @@ class Polynom(vararg coeffs: Double) {
     /**
      * Вычитание
      */
-    operator fun minus(other: Polynom): Polynom {
-        val answList = MutableList(max(degree(), other.degree()) + 1) { 0.0 }
-        for (i in answList.indices) {
-            if (i <= maxCoeff)
-                answList[i] += coeffsList[maxCoeff - i]
-            if (i <= other.maxCoeff)
-                answList[i] -= other.coeffsList[other.maxCoeff - i]
-        }
-        return Polynom(*answList.reversed().toDoubleArray())
-    }
+    operator fun minus(other: Polynom): Polynom = plusOrMinus(other, 2)
 
     /**
      * Умножение
@@ -107,8 +106,9 @@ class Polynom(vararg coeffs: Double) {
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
     operator fun div(other: Polynom): Polynom {
+        if (other.empty()) throw IllegalArgumentException("На ноль делить нельзя!")
         val newMaxCoeff = Pair(degree() - other.degree(), coeff(degree()) / other.coeff(other.degree()))
-        if (newMaxCoeff.first < 0 || (degree() == 0 && coeff(0) == 0.0)) return Polynom(0.0)
+        if (newMaxCoeff.first < 0 || empty()) return Polynom(0.0)
         val answList = mutableListOf(newMaxCoeff.second)
         for (i in 1..newMaxCoeff.first) answList.add(0.0)
         val answPolynom = Polynom(*answList.toDoubleArray())

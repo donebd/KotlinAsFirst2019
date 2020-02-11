@@ -84,9 +84,11 @@ class PolynomTest {
     fun div() {
         val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
         val p2 = Polynom(1.0, 3.0, 2.0)
+        val p3 = Polynom(0.0)
         val r = Polynom(1.0, -5.0)
         assertApproxEquals(r, p1 / p2, 1e-10)
         assertApproxEquals(Polynom(1.0, 2.0), Polynom(2.0, 4.0) / Polynom(0.0, 2.0), 1e-10)
+        assertThrows(IllegalArgumentException::class.java) { p1 / p3 }
     }
 
     @Test
