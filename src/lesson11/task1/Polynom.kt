@@ -126,7 +126,7 @@ class Polynom(vararg coeffs: Double) {
      * Сравнение на равенство
      */
     override fun equals(other: Any?): Boolean =
-        other is Polynom && (this - other).degree() == 0 && (this - other).coeff(0) == 0.0
+        other is Polynom && (this - other).empty()
 
     /**
      * Получение хеш-кода
