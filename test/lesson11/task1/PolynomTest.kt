@@ -15,6 +15,14 @@ class PolynomTest {
     }
 
     @Test
+    fun empty() {
+        val p = Polynom(0.0, 0.0)
+        val s = Polynom()
+        assertTrue(p.empty())
+        assertTrue(s.empty())
+    }
+
+    @Test
     fun coeff() {
         val p = Polynom(1.0, 3.0, 2.0)
         assertEquals(1.0, p.coeff(2))
@@ -107,11 +115,15 @@ class PolynomTest {
     fun equals() {
         assertEquals(Polynom(1.0, 2.0, 3.0), Polynom(1.0, 2.0, 3.0))
         assertEquals(Polynom(0.0, 2.0, 3.0), Polynom(2.0, 3.0))
+        assertEquals(Polynom(0.0, 0.0, 0.0), Polynom())
     }
 
     @Test
     @Tag("Normal")
     fun hashCodeTest() {
         assertEquals(Polynom(1.0, 2.0, 3.0).hashCode(), Polynom(1.0, 2.0, 3.0).hashCode())
+        assertEquals(Polynom(0.0, 1.0, 2.0, 3.0).hashCode(), Polynom(1.0, 2.0, 3.0).hashCode())
+        assertEquals(Polynom().hashCode(), Polynom(0.0, 0.0).hashCode())
+        assertEquals((Polynom() - Polynom()).hashCode(), Polynom().hashCode())
     }
 }

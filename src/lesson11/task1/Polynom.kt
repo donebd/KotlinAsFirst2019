@@ -23,25 +23,29 @@ import kotlin.math.pow
  * Нули в середине и в конце пропускаться не должны, например: x^3+2x^2+1 --> Polynom(1.0, 2.0, 0.0, 1.0)
  * Старшие коэффициенты, равные нулю, игнорировать, например Polynom(0.0, 0.0, 5.0, 3.0) соответствует 5x+3
  */
-class Polynom(vararg coeffs: Double) {
+class Polynom private constructor(private var coeffsList: List<Double>) {
 
-    private var coeffsList = coeffs.toList()
+    private var maxCoeff = coeffsList.size - 1
 
-    private var reversCoefss = coeffsList.reversed()
+    init {
+        coeffsList = coeffsList.dropWhile { it == 0.0 }
+        if (coeffsList.isEmpty()) coeffsList += 0.0
+        maxCoeff = coeffsList.size - 1
+    }
 
-    private var maxCoeff = coeffs.size - 1
+    constructor(vararg coeffs: Double) : this(coeffs.toList())
 
-    private fun empty() = degree() == 0 && coeff(0) == 0.0
+    fun empty() = degree() == 0 && coeff(0) == 0.0
 
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
-    fun coeff(i: Int): Double = reversCoefss[i]
+    fun coeff(i: Int): Double = coeffsList.reversed()[i]
 
     /**
      * Расчёт значения при заданном x
      */
-    fun getValue(x: Double): Double = reversCoefss.indices.map { reversCoefss[it] * x.pow(it) }.sum()
+    fun getValue(x: Double): Double = coeffsList.reversed().indices.map { coeffsList.reversed()[it] * x.pow(it) }.sum()
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -65,7 +69,7 @@ class Polynom(vararg coeffs: Double) {
                     else -> answList[i] -= other.coeffsList[other.maxCoeff - i]
                 }
         }
-        return Polynom(*answList.reversed().toDoubleArray())
+        return Polynom(answList.reversed())
     }
 
     /**
@@ -76,7 +80,7 @@ class Polynom(vararg coeffs: Double) {
     /**
      * Смена знака (при всех слагаемых)
      */
-    operator fun unaryMinus(): Polynom = Polynom(*this.coeffsList.map { if (it != 0.0) -it else 0.0 }.toDoubleArray())
+    operator fun unaryMinus(): Polynom = Polynom(this.coeffsList.map { if (it != 0.0) -it else 0.0 })
 
     /**
      * Вычитание
@@ -88,11 +92,11 @@ class Polynom(vararg coeffs: Double) {
      */
     operator fun times(other: Polynom): Polynom {
         var answPolynom = Polynom()
-        for (i in reversCoefss.indices) {
+        for (i in coeffsList.reversed().indices) {
             val tmpList = other.coeffsList.toMutableList()
-            for (j in tmpList.indices) tmpList[j] *= reversCoefss[i]
+            for (j in tmpList.indices) tmpList[j] *= coeffsList.reversed()[i]
             for (j in 1..i) tmpList.add(0.0)
-            answPolynom += Polynom(*tmpList.toDoubleArray())
+            answPolynom += Polynom(tmpList)
         }
         return answPolynom
     }
@@ -111,7 +115,7 @@ class Polynom(vararg coeffs: Double) {
         if (newMaxCoeff.first < 0 || empty()) return Polynom(0.0)
         val answList = mutableListOf(newMaxCoeff.second)
         for (i in 1..newMaxCoeff.first) answList.add(0.0)
-        val answPolynom = Polynom(*answList.toDoubleArray())
+        val answPolynom = Polynom(answList)
         val tmpPolynom = other * answPolynom
         val remainderPolynom = this - tmpPolynom
         return answPolynom + remainderPolynom.div(other)
@@ -133,7 +137,6 @@ class Polynom(vararg coeffs: Double) {
      */
     override fun hashCode(): Int {
         var result = coeffsList.hashCode()
-        result = 31 * result + reversCoefss.hashCode()
         result = 31 * result + maxCoeff
         return result
     }
