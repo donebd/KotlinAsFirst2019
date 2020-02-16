@@ -39,11 +39,7 @@ class PhoneBook {
      * и false, если человек с таким именем отсутствовал в телефонной книге
      * (во втором случае телефонная книга не должна меняться).
      */
-    fun removeHuman(name: String): Boolean {
-        if (!contacts.containsKey(name)) return false
-        contacts.remove(name)
-        return true
-    }
+    fun removeHuman(name: String): Boolean = contacts.remove(name) != null
 
     /**
      * Добавить номер телефона.
@@ -53,9 +49,8 @@ class PhoneBook {
      * либо такой номер телефона зарегистрирован за другим человеком.
      */
     fun addPhone(name: String, phone: String): Boolean {
-        if (!contacts.containsKey(name) || contacts[name]!!.contains(phone)) return false
         for ((i, j) in contacts) if (j.contains(phone)) return false
-        contacts[name]!!.add(phone)
+        contacts[name]?.add(phone) ?: return false
         return true
     }
 
@@ -65,11 +60,7 @@ class PhoneBook {
      * и false, если человек с таким именем отсутствовал в телефонной книге
      * либо у него не было такого номера телефона.
      */
-    fun removePhone(name: String, phone: String): Boolean {
-        if (!contacts.containsKey(name) || !contacts[name]!!.contains(phone)) return false
-        contacts[name]!!.remove(phone)
-        return true
-    }
+    fun removePhone(name: String, phone: String): Boolean = contacts[name]?.remove(phone) ?: false
 
     /**
      * Вернуть все номера телефона заданного человека.
