@@ -2,7 +2,6 @@
 
 package lesson11.task1
 
-import java.lang.IllegalArgumentException
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -23,17 +22,17 @@ import kotlin.math.pow
  * Нули в середине и в конце пропускаться не должны, например: x^3+2x^2+1 --> Polynom(1.0, 2.0, 0.0, 1.0)
  * Старшие коэффициенты, равные нулю, игнорировать, например Polynom(0.0, 0.0, 5.0, 3.0) соответствует 5x+3
  */
-class Polynom private constructor(private var coeffsList: List<Double>) {
+class Polynom(coeffs: List<Double>) {
 
-    private var maxCoeff = coeffsList.size - 1
+    private var coeffsList = coeffs.dropWhile { it == 0.0 }
 
     init {
-        coeffsList = coeffsList.dropWhile { it == 0.0 }
-        if (coeffsList.isEmpty()) coeffsList += 0.0
-        maxCoeff = coeffsList.size - 1
+        if (coeffsList.isEmpty()) coeffsList = coeffsList + 0.0
     }
 
-    constructor(vararg coeffs: Double) : this(coeffs.toList())
+    private val maxCoeff = coeffsList.size - 1
+
+    constructor(vararg coeff: Double) : this(coeff.toList())
 
     fun empty() = degree() == 0 && coeff(0) == 0.0
 
@@ -110,7 +109,7 @@ class Polynom private constructor(private var coeffsList: List<Double>) {
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
     operator fun div(other: Polynom): Polynom {
-        if (other.empty()) throw IllegalArgumentException("На ноль делить нельзя!")
+        require(!other.empty()) { "На ноль делить нельзя!" }
         val newMaxCoeff = Pair(degree() - other.degree(), coeff(degree()) / other.coeff(other.degree()))
         if (newMaxCoeff.first < 0 || empty()) return Polynom(0.0)
         val answList = mutableListOf(newMaxCoeff.second)
