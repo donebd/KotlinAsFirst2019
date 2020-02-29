@@ -2,7 +2,6 @@
 
 package lesson11.task1
 
-import kotlin.math.max
 import kotlin.math.pow
 
 /**
@@ -24,17 +23,11 @@ import kotlin.math.pow
  */
 class Polynom(coeffs: List<Double>) {
 
-    private var coeffsList = coeffs.dropWhile { it == 0.0 }
-
-    init {
-        if (coeffsList.isEmpty()) coeffsList = coeffsList + 0.0
-    }
-
-    private val maxCoeff = coeffsList.size - 1
+    private val coeffsList = coeffs.dropWhile { it == 0.0 }
 
     constructor(vararg coeff: Double) : this(coeff.toList())
 
-    fun empty() = degree() == 0 && coeff(0) == 0.0
+    fun empty() = degree() == -1
 
     /**
      * Геттер: вернуть значение коэффициента при x^i
@@ -53,28 +46,21 @@ class Polynom(coeffs: List<Double>) {
      * Слагаемые с нулевыми коэффициентами игнорировать, т.е.
      * степень 0x^2+0x+2 также равна 0.
      */
-    fun degree(): Int =
-        if (coeffsList.any { it != 0.0 }) maxCoeff - coeffsList.indices.first { coeffsList[it] != 0.0 }
-        else 0
-
-    private fun plusOrMinus(other: Polynom, switch: Int): Polynom {
-        val answList = MutableList(max(degree(), other.degree()) + 1) { 0.0 }
-        for (i in answList.indices) {
-            if (i <= maxCoeff)
-                answList[i] += coeffsList[maxCoeff - i]
-            if (i <= other.maxCoeff)
-                when (switch) {
-                    1 -> answList[i] += other.coeffsList[other.maxCoeff - i]
-                    else -> answList[i] -= other.coeffsList[other.maxCoeff - i]
-                }
-        }
-        return Polynom(answList.reversed())
-    }
+    fun degree(): Int = coeffsList.size - 1
 
     /**
      * Сложение
      */
-    operator fun plus(other: Polynom): Polynom = plusOrMinus(other, 1)
+    operator fun plus(other: Polynom): Polynom {
+        val answList = MutableList(maxOf(coeffsList.size, other.coeffsList.size, 0)) { 0.0 }
+        for (i in answList.indices) {
+            if (i <= degree())
+                answList[i] += coeffsList[degree() - i]
+            if (i <= other.degree())
+                answList[i] += other.coeffsList[other.degree() - i]
+        }
+        return Polynom(answList.reversed())
+    }
 
     /**
      * Смена знака (при всех слагаемых)
@@ -84,7 +70,7 @@ class Polynom(coeffs: List<Double>) {
     /**
      * Вычитание
      */
-    operator fun minus(other: Polynom): Polynom = plusOrMinus(other, 2)
+    operator fun minus(other: Polynom): Polynom = this + other.unaryMinus()
 
     /**
      * Умножение
@@ -110,8 +96,9 @@ class Polynom(coeffs: List<Double>) {
      */
     operator fun div(other: Polynom): Polynom {
         require(!other.empty()) { "На ноль делить нельзя!" }
+        if (empty()) return Polynom()
         val newMaxCoeff = Pair(degree() - other.degree(), coeff(degree()) / other.coeff(other.degree()))
-        if (newMaxCoeff.first < 0 || empty()) return Polynom(0.0)
+        if (newMaxCoeff.first < 0) return Polynom()
         val answList = mutableListOf(newMaxCoeff.second)
         for (i in 1..newMaxCoeff.first) answList.add(0.0)
         val answPolynom = Polynom(answList)
@@ -134,9 +121,5 @@ class Polynom(coeffs: List<Double>) {
     /**
      * Получение хеш-кода
      */
-    override fun hashCode(): Int {
-        var result = coeffsList.hashCode()
-        result = 31 * result + maxCoeff
-        return result
-    }
+    override fun hashCode(): Int = coeffsList.hashCode()
 }

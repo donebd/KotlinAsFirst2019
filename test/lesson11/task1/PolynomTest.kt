@@ -41,7 +41,7 @@ class PolynomTest {
         val p = Polynom(1.0, 1.0, 1.0)
         assertEquals(2, p.degree())
         val q = Polynom(0.0)
-        assertEquals(0, q.degree())
+        assertEquals(-1, q.degree())
         val r = Polynom(0.0, 1.0, 2.0)
         assertEquals(1, r.degree())
     }
