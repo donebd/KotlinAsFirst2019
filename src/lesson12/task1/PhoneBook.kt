@@ -2,6 +2,8 @@
 
 package lesson12.task1
 
+import javax.xml.crypto.dsig.keyinfo.PGPData
+
 /**
  * Класс "Телефонная книга".
  *
@@ -20,6 +22,13 @@ package lesson12.task1
 class PhoneBook {
 
     private val contacts = mutableMapOf<String, MutableSet<String>>()
+
+    fun copy(): PhoneBook {
+        val a = PhoneBook()
+        for ((i, j) in contacts)
+            a.contacts[i] = j
+        return a
+    }
 
     /**
      * Добавить человека.

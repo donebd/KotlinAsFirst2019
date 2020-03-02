@@ -102,6 +102,9 @@ internal class PhoneBookTest {
         assertTrue(book == book)
         book2.removeHuman("Иванов Петр")
         assertFalse(book == book2)
+        val book1 = book.copy()
+        book1.removeHuman("Иванов Петр")
+        assertTrue(book1 == book2)
     }
 
     @Test
@@ -119,5 +122,7 @@ internal class PhoneBookTest {
         assertTrue(book2.addPhone("Васильев Дмитрий", "+79217654321"))
         assertTrue(book2.addPhone("Иванов Петр", "+79211234567"))
         assertTrue(book.hashCode() == book2.hashCode())
+        val book3 = book2.copy()
+        assertTrue(book2.hashCode() == book3.hashCode())
     }
 }
